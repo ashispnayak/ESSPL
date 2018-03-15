@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-navbar no-border-bottom>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>Book A Ride</ion-title>
+    </ion-navbar>
+    <ion-toolbar no-border-top>
+<!--         <ion-searchbar (click)="showAddressModal()" [(ngModel)]="address.place.desc" type="text" placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
+        </ion-searchbar> -->
+        <ion-searchbar  autocorrect="off" autocapitalize="off" spellcheck="off" #searchbar id="origin-input" placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
+        </ion-searchbar>
+        <ion-searchbar autocorrect="off" autocapitalize="off" spellcheck="off" #dropsearchbar id="destination-input" placeholder="Enter Drop point" color="primary" ng-disabled="!pickupPoint" ng-model="dropPoint">
+        </ion-searchbar>
+       <button ion-button color="secondary" (click)="bookRide();">Book</button>
+    </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="map-page">
+  <ion-buttons float-end class="current-location">
+    <button ion-button icon-only (click)="currentLocation()">
+      <img src="./assets/icon/current-location.png" alt="">
+    </button>
+  </ion-buttons>
+
+  <div #map id="map" class="map"></div>
+  <div class="centerMarker"></div>
+  <div class="address-view">
+    <ion-list>
+      <ion-item no-lines class="help-text">
+        Drag map to select Address
+      </ion-item>
+      <ion-item no-lines class="address-item">
+        <ion-label stacked class="title-label">ADDRESS</ion-label>
+        <ion-textarea class="address" [(ngModel)]="address"></ion-textarea>
+      </ion-item>
+      <ion-item>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

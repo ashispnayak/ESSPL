@@ -1,50 +1,86 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from "@angular/http";
 import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
-import { GooglePlus } from '@ionic-native/google-plus';
-import{ AngularFireModule } from 'angularfire2';
-import { HttpModule } from '@angular/http';
-import firebase from 'firebase';
-import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { DashboardPage } from '../pages/dashboard/dashboard';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { ESSPL } from './app.component';
+import { Geolocation } from '@ionic-native/geolocation';
 
+import { AboutPage } from '../pages/about/about';
+import { AccountPage } from '../pages/account/account';
+import { LoginPage } from '../pages/login/login';
+import { MapPage } from '../pages/map/map';
+import { OffersPage } from '../pages/offers/offers';
+import { OffersDetailPage } from '../pages/offers-detail/offers-detail';
+import { SubscribePage } from '../pages/subscribe/subscribe';
+import { SignupPage } from '../pages/signup/signup';
+import { ContactPage } from '../pages/contact/contact';
+import { PlacesListPage } from '../pages/places-list/places-list';
+import { PlacesDetailPage } from '../pages/places-detail/places-detail';
+import { TabsPage } from '../pages/tabs/tabs';
+import { TutorialPage } from '../pages/tutorial/tutorial';
+import { SupportPage } from '../pages/support/support';
+import { AutocompletePage } from '../pages/autocomplete/autocomplete';
 
-export const firebaseConfig={
-   apiKey: "AIzaSyBrBaAvyALhPRjfg41qCf5isMMyaffIebE",
-    authDomain: "esspl-c3a5b.firebaseapp.com",
-    databaseURL: "https://esspl-c3a5b.firebaseio.com",
-    projectId: "esspl-c3a5b",
-    storageBucket: "esspl-c3a5b.appspot.com",
-    messagingSenderId: "691458927450"
-}
-firebase.initializeApp(firebaseConfig)
+import { OffersData } from '../providers/offers-data';
+import { UserData } from '../providers/user-data';
+import { Utility } from '../providers/utility';
+import { SpinnerProvider } from '../providers/spinner/spinner';
+import { MapProvider } from '../providers/map/map';
+
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage,
-    DashboardPage
+    ESSPL,
+    AboutPage,
+    AccountPage,
+    LoginPage,
+    MapPage,
+    OffersPage,
+    SubscribePage,
+    OffersDetailPage,
+    SignupPage,
+    ContactPage,
+    PlacesListPage,
+    PlacesDetailPage,
+    TabsPage,
+    TutorialPage,
+    SupportPage,
+    AutocompletePage
   ],
-  imports: [
-    BrowserModule,
-        HttpModule,
-    IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseConfig)
+  imports: [BrowserModule ,HttpModule,
+    IonicModule.forRoot(ESSPL),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    HomePage,
-    DashboardPage
+    ESSPL,
+    AboutPage,
+    AccountPage,
+    LoginPage,
+    MapPage,
+    OffersPage,
+    SubscribePage,
+    OffersDetailPage,
+    SignupPage,
+    ContactPage,
+    PlacesListPage,
+    PlacesDetailPage,
+    TabsPage,
+    TutorialPage,
+    SupportPage,
+    AutocompletePage
   ],
   providers: [
     StatusBar,
+    Geolocation,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-     GooglePlus
+    UserData, Utility, OffersData, SpinnerProvider, MapProvider
+    
   ]
 })
-export class AppModule {}
+export class AppModule { }
+

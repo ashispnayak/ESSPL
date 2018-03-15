@@ -1,0 +1,66 @@
+{
+    "offers": [{
+            "id": "101",
+            "name": "Burt Bear",
+            "desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.",
+            "banner": "assets/img/dummy/event.jpg",
+            "twitter": "ionicframework",
+            "address": "123, Las Vegas, US",
+            "email": "ahamad.shabnam@gmail.com",
+            "phone": "+1-541-754-3010",
+            "distance": "3 KM",
+            "views": "100",
+            "likes": "200",
+            "date": "01-Jan to 04 Jan",
+            "time": "10:00 PM"
+        },
+        {
+            "id": "102",
+            "name": "Charlie Cheetah",
+            "desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. ",
+            "banner": "assets/img/dummy/bear.jpg",
+            "twitter": "ionicframework",
+            "address": "123, Las Vegas, US",
+            "email": "ahamad.shabnam@gmail.com",
+            "phone": "+1-541-754-3010",
+            "distance": "3 KM",
+            "views": "100",
+            "likes": "200",
+            "date": "01-Jan to 04 Jan",
+            "time": "10:00 PM"
+        },
+        {
+            "id": "103",
+            "name": "Donald Duck",
+            "desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.",
+            "banner": "assets/img/dummy/duck.jpg",
+            "twitter": "ionicframework",
+            "address": "123, Las Vegas, US",
+            "email": "ahamad.shabnam@gmail.com",
+            "phone": "+1-541-754-3010",
+            "distance": "3 KM",
+            "views": "100",
+            "likes": "200",
+            "date": "01-Jan to 04 Jan",
+            "time": "10:00 PM"
+        }
+    ],
+
+    "map": [{
+            "name": "Monona Terrace Convention Center",
+            "lat": 43.071584,
+            "lng": -89.380120,
+            "center": true
+        },
+        {
+            "name": "Ionic HQ",
+            "lat": 43.074395,
+            "lng": -89.381056
+        },
+        {
+            "name": "Afterparty - Brocach Irish Pub",
+            "lat": 43.07336,
+            "lng": -89.38335
+        }
+    ]
+}
