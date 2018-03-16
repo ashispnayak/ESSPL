@@ -80,9 +80,9 @@ export class OffersPage {
     nav.push(OffersDetailPage, item);
   } 
 
-   openShare(item) {
+  /* openShare(item) {
     let actionSheet = this.actionSheetCtrl.create({
-      title: 'Share ' + "TEST",
+      title: 'Share ' + 'TEST',
       buttons: [
         {
           text: 'Copy Link',
@@ -103,5 +103,5 @@ export class OffersPage {
     });
 
     actionSheet.present();
-  }
+  }*/
 }

@@ -27,17 +27,7 @@ export class UserData {
     }
   };
 
-  login(username) {
-    this.storage.set(this.HAS_LOGGED_IN, true);
-    this.setUsername(username);
-    this.events.publish('user:login');
-  };
-
-  signup(username) {
-    this.storage.set(this.HAS_LOGGED_IN, true);
-    this.setUsername(username);
-    this.events.publish('user:signup');
-  };
+  
 
   logout() {
     this.storage.remove(this.HAS_LOGGED_IN);
@@ -57,10 +47,14 @@ export class UserData {
 
   // return a promise
   hasLoggedIn() {
-    return this.storage.get(this.HAS_LOGGED_IN).then((value) => {
-      return value === true;
+    return this.storage.get('hasLoggedIn').then((value) => {
+      console.log('hello');
+      console.log(value);
+      return value;
     });
   };
+
+
 
   checkHasSeenTutorial() {
     return this.storage.get(this.HAS_SEEN_TUTORIAL).then((value) => {

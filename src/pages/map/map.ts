@@ -1,11 +1,14 @@
 import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, Platform } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Storage } from '@ionic/storage';
 
 import { Observable } from 'rxjs/Observable';
-import { Storage } from '@ionic/storage';
 import { SpinnerProvider } from '../../providers/spinner/spinner'
 import { MapProvider } from '../../providers/map/map';
+
+declare var google;
+
 
 /**
  * Generated class for the MapPage page.
@@ -46,7 +49,8 @@ export class MapPage {
     public mapService: MapProvider,
     public spinner: SpinnerProvider,
     public viewCtrl: ViewController,
-    public navParams: NavParams) {
+    public navParams: NavParams,
+     public storage: Storage) {
       this.platform.ready().then(() => this.loadMaps());
   }
 
@@ -56,14 +60,18 @@ export class MapPage {
 
   loadMaps() {
     
+          this.storage.set('hasLoggedIn', 'true');
+
       this.initializeMap();
       this.initAutocomplete();
       this.initAutocompleteDrop();
 
   }
 
-  initializeMap() {
+  initializeMap() {  
+     
     console.log("2");
+
     let that = this;
     that.currentLocation();
     this.zone.run(() => {

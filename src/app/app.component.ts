@@ -8,7 +8,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { AccountPage } from '../pages/account/account';
 import { LoginPage } from '../pages/login/login';
-import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 
@@ -54,7 +53,7 @@ export class ESSPL {
   ];
   loggedOutPages: PageInterface[] = [
     { title: 'Login', component: LoginPage, icon: 'log-in' },
-    { title: 'Signup', component: SignupPage, icon: 'person-add' }
+  
   ];
   rootPage: any;
 
@@ -76,12 +75,18 @@ export class ESSPL {
     // Check if the user has already seen the tutorial
     this.userData.checkHasSeenTutorial().then((hasSeenTutorial) => {
       if (hasSeenTutorial === null) {
+        console.log(hasSeenTutorial);
         // User has not seen tutorial
         this.rootPage = TutorialPage;
-      } else {
-        // User has seen tutorial
-        this.rootPage = TabsPage;
       }
+      else{
+                // User has seen tutorial
+
+        this.checkMore();
+      }
+    
+     
+      
     });
 
 
@@ -91,6 +96,21 @@ export class ESSPL {
     });
 
     this.listenToLoginEvents();
+  }
+  checkMore(){
+
+        this.userData.hasLoggedIn().then((hasLoggedIn)=> {
+          console.log(hasLoggedIn,'logIn');
+          if(hasLoggedIn === 'true'){
+            this.rootPage = TabsPage;
+          }
+           else  {
+        this.rootPage = LoginPage;
+      }
+        })
+
+
+      
   }
 
   openPage(page: PageInterface) {

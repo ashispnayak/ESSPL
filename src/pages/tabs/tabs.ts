@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Storage } from '@ionic/storage';
 
 import { NavParams } from 'ionic-angular';
 
@@ -15,8 +16,11 @@ export class TabsPage {
   tab2Root: any = OffersPage;
   mySelectedIndex: number;
 
-  constructor(navParams: NavParams) {
+  constructor(navParams: NavParams, public storage: Storage) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
+        
+
   }
+  
 
 }
