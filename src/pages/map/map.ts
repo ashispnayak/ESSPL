@@ -182,6 +182,7 @@ export class MapPage {
               this.address = address.results[0].formatted_address;
               place_id = (address.results[0].place_id);
               console.log(place_id);
+              this.assignPlaceIds(place_id,purpose);
               this.getAddressComponentByPlace(address.results[0], latLngObj);
             },
             err => console.log("Error in getting the street address " + err)
@@ -190,19 +191,28 @@ export class MapPage {
           this.address = s_address.results[0].formatted_address;
           place_id = (s_address.results[0].place_id);
           console.log(place_id);
+          this.assignPlaceIds(place_id,purpose);
           this.getAddressComponentByPlace(s_address.results[0], latLngObj);
         }
-        if(purpose === 'ORIGIN' && place_id!=null){
-          this.origin_placeId = place_id;
-        }
-        if(purpose === 'DESTINATION' && place_id!=null){
-          this.destination_placeId = place_id;
-        }
+
       },
       err => {
         console.log('No Address found ' + err);
       }
     );
+  }
+
+  assignPlaceIds(place_id,purpose){
+        if(place_id != null){
+          if(purpose == 'ORIGIN'){
+            console.log("originwala");
+            this.origin_placeId = place_id;
+          }else{
+            console.log("destinationwala");
+            this.destination_placeId = place_id;
+          }
+        }else
+          console.log("plaeId is null");
   }
 
 
@@ -274,10 +284,10 @@ export class MapPage {
   bookRide() {
     console.log("7");
     this.travelMode = 'DRIVING';
-    console.log( localStorage.getItem('origin_placeId'));
-    console.log( localStorage.getItem('destination_placeId'));
-    this.originPlaceId = localStorage.getItem('origin_placeId');
-    this.destinationPlaceId = localStorage.getItem('destination_placeId');
+    console.log(  this.origin_placeId);
+    console.log( this.destination_placeId );
+    this.originPlaceId =  this.origin_placeId ;
+    this.destinationPlaceId =  this.destination_placeId ;
     this.directionsService.route({
       origin: {'placeId': this.originPlaceId},
       destination: {'placeId': this.destinationPlaceId},

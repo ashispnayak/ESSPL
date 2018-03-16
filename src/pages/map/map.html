@@ -8,11 +8,10 @@
     <ion-toolbar no-border-top>
 <!--         <ion-searchbar (click)="showAddressModal()" [(ngModel)]="address.place.desc" type="text" placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
         </ion-searchbar> -->
-        <ion-searchbar  autocorrect="off" autocapitalize="off" spellcheck="off" #searchbar id="origin-input" placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
+        <ion-searchbar  autocorrect="off" autocapitalize="off" spellcheck="off" #searchbar placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
         </ion-searchbar>
-        <ion-searchbar autocorrect="off" autocapitalize="off" spellcheck="off" #dropsearchbar id="destination-input" placeholder="Enter Drop point" color="primary" ng-disabled="!pickupPoint" ng-model="dropPoint">
+        <ion-searchbar autocorrect="off" autocapitalize="off" spellcheck="off" #dropsearchbar placeholder="Enter Drop point" color="primary" ng-disabled="!pickupPoint" ng-model="dropPoint">
         </ion-searchbar>
-       <button ion-button color="secondary" (click)="bookRide();">Book</button>
     </ion-toolbar>
 
 </ion-header>
@@ -39,4 +38,5 @@
       </ion-item>
     </ion-list>
   </div>
+  <button ion-button color="secondary" (click)="bookRide();">Book</button>
 </ion-content>
