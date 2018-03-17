@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>MyApp</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+<widget id="com.enigma.esspl" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Esspl</name>
+    <description>An App meant for Travelling</description>
+    <author email="hi@ionicframework" href="http://ionicframework.com/">Team Enigma</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -94,5 +94,8 @@
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDBmm5iDo1-tzbDG-IKxBQzmisKXds7U24" />
         <variable name="PLAY_SERVICES_VERSION" value="11.8.0" />
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.0" />
+    <plugin name="cordova-plugin-googleplus" spec="~5.2.1">
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.691458927450-83m5t20bvc324ldbov6q0lk94bas0g1l" />
+
     </plugin>
 </widget>

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MenuController, NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
-import { TabsPage } from '../tabs/tabs';
+import { LoginPage } from '../login/login';
 
 
 export interface Slide {
@@ -41,7 +41,7 @@ export class TutorialPage {
   }
 
   startApp() {
-    this.navCtrl.push(TabsPage);
+    this.navCtrl.push(LoginPage);
     this.storage.set('hasSeenTutorial', 'true');
   }
 
