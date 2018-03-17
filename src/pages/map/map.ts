@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, ViewController, Platform } from 'i
 import { Geolocation } from '@ionic-native/geolocation';
 import { Storage } from '@ionic/storage';
 
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, CameraPosition, MarkerOptions, Marker} from '@ionic-native/google-maps';
+
 import { Firebase } from '@ionic-native/firebase';
 
 import { Observable } from 'rxjs/Observable';
@@ -37,7 +39,9 @@ declare var google;
    directionsService = new google.maps.DirectionsService;
    directionsDisplay = new google.maps.DirectionsRenderer;
 
+   map2: GoogleMap;
    map: any;
+   marker: any;
    address = '';
    origin_address = '';
    destination_address = '';
@@ -63,6 +67,7 @@ declare var google;
 
    ionViewDidLoad() {
      console.log('ionViewDidLoad MapPage');
+     //this.loadMap();
    }
 
    loadMaps() {
@@ -91,40 +96,47 @@ declare var google;
          scaleControl: true,
        });
 
-
-       // Map drag started
-       this.map.addListener('dragstart', function() {
-         console.log('Drag start');
-       });
-       // Map dragging
-       this.map.addListener('drag', function() {
-         that.address = 'Searching...';
-       });
-       //Reload markers every time the map moves
-       this.map.addListener('dragend', function() {
-         let map_center = that.getMapCenter();
-         let latLngObj = {'lat': map_center.lat(), 'long': map_center.lng() };
-         console.log(latLngObj);
-         try{
-           that.getAddress(latLngObj,'ORIGIN');
-         }catch(exception){
-           console.log(exception + "hauci");
-         }
-       });
-
-       google.maps.event.addListenerOnce(this.map, 'idle', () => {
-         google.maps.event.trigger(this.map, 'resize');
-         mapEle.classList.add('show-map');
-       });
-
-       google.maps.event.addListener(this.map, 'bounds_changed', () => {
-         this.zone.run(() => {
-           this.resizeMap();
+       let CentralPark = new google.maps.LatLng(parseFloat("20.296139201680244"),parseFloat("85.82539810688479"));
+       console.log(CentralPark.toString);
+       let marker = new google.maps.Marker({
+               position: CentralPark,
+               map: this.map
          });
+
+     console.log(marker.getMap);
+         // Map drag started
+         this.map.addListener('dragstart', function() {
+           console.log('Drag start');
+         });
+         // Map dragging
+         this.map.addListener('drag', function() {
+           that.address = 'Searching...';
+         });
+         //Reload markers every time the map moves
+         this.map.addListener('dragend', function() {
+           let map_center = that.getMapCenter();
+           let latLngObj = {'lat': map_center.lat(), 'long': map_center.lng() };
+           console.log(latLngObj);
+           try{
+             that.getAddress(latLngObj,'ORIGIN');
+           }catch(exception){
+             console.log(exception + "hauci");
+           }
+         });
+
+         google.maps.event.addListenerOnce(this.map, 'idle', () => {
+           google.maps.event.trigger(this.map, 'resize');
+           mapEle.classList.add('show-map');
+         });
+
+         google.maps.event.addListener(this.map, 'bounds_changed', () => {
+           this.zone.run(() => {
+             this.resizeMap();
+           });
+         });
+
+
        });
-
-
-     });
 
      //new this.AutocompleteDirectionsHandler(this.map);
      this.directionsDisplay.setMap(this.map);
@@ -350,12 +362,23 @@ declare var google;
        this.userdata.show_loading("Getting Rides");
        return this.serviceProvider.getRidesInformation();;
      }).then((result) => {
-       //act as per results of api
 
-       console.log(JSON.stringify(result));
+       //console.log(JSON.stringify(result));
        let rides =  JSON.stringify(result);
+       var obj = JSON.parse(rides.toString());
+       var carLocation, carName, i=0, type;
+       let latitude : any, longitude: any;
+       for (var key in obj) {
+         if (obj.hasOwnProperty(key)) {
 
-       this.placeRidesOnMap(rides.car1.location,"car1")
+           carName = (JSON.stringify(obj[key].name));
+           latitude = (JSON.stringify(obj[key].location.latitude));
+           longitude = (JSON.stringify(obj[key].location.longitude));
+           type = (JSON.stringify(obj[key].type));
+           
+           setTimeout(this.placeRidesOnMap(latitude,longitude,carName), i * 400);
+         }
+       }
 
        this.userdata.dismiss_loading();
        //return this.api.getMobileStatus(countryId,this.userdata.number);  
@@ -372,13 +395,28 @@ declare var google;
      }
    }
 
-   placeRidesOnMap(LatLng,carName){
-     var marker = new google.maps.Marker({
-       position: LatLng,
+   placeRidesOnMap(latitude,longitude,carName){
+     let location = new google.maps.LatLng((latitude),(longitude));
+     var image = '../../assets/img/reservecar.png';
+     this.marker = new google.maps.Marker({
+       position: location,
        map: this.map,
-       title: carName
+       title: carName,
+       draggable: true,
+       animation: google.maps.Animation.BOUNCE,
+       icon: image
      });
+
+     //this.marker.addListener('click', this.toggleBounce);
+     //console.log(marker.getMap);
    }
+   toggleBounce() {
+    if (this.marker.getAnimation() !== null) {
+      this.marker.setAnimation(null);
+    } else {
+      this.marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+  }
 
    updateRideLocationService(latitude,longitude,carname){
 
@@ -412,4 +450,10 @@ declare var google;
      this.firebase.onTokenRefresh()
      .subscribe((token: string) => console.log(`Got a new token ${token}`));
    }
+
+   loadMap() {
+
+
+   }
  }
+ 

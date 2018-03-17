@@ -12,6 +12,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 
 import { Firebase } from '@ionic-native/firebase';
 import { Network } from '@ionic-native/network';
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, CameraPosition, MarkerOptions, Marker} from '@ionic-native/google-maps';
 //import { File } from '@ionic-native/file';
 import { Storage } from '@ionic/storage';
 import firebase from 'firebase';
@@ -110,8 +111,8 @@ firebase.initializeApp(firebaseConfig)
     Firebase,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserData, Utility, OffersData, SpinnerProvider, MapProvider,
-    ServiceProvider
-    
+    ServiceProvider,
+    GoogleMaps
   ]
 })
 export class AppModule { }
