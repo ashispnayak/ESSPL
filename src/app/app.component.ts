@@ -15,6 +15,7 @@ import { PlacesListPage } from '../pages/places-list/places-list';
 import { AboutPage } from '../pages/about/about';
 import { SubscribePage } from '../pages/subscribe/subscribe';
 import { ContactPage } from '../pages/contact/contact';
+import { MapPage } from '../pages/map/map';
 
 import { UserData } from '../providers/userdata';
 
@@ -40,19 +41,19 @@ export class ESSPL {
   // the left menu only works after login
   // the login page disables the left menu
   appPages: PageInterface[] = [
-    { title: 'ESSPL', component: TabsPage, icon: 'calendar' },
-    { title: 'Places', component: PlacesListPage,  icon: 'md-globe' },
-    { title: 'About', component: AboutPage, icon: 'information-circle' },
-    { title: 'Subscribe', component: SubscribePage, icon: 'logo-rss' },    
-    { title: 'Cotact', component: ContactPage, icon: 'md-mail' },
-    
+  { title: 'ESSPL', component: TabsPage, icon: 'calendar' },
+  { title: 'Places', component: PlacesListPage,  icon: 'md-globe' },
+  { title: 'About', component: AboutPage, icon: 'information-circle' },
+  { title: 'Subscribe', component: SubscribePage, icon: 'logo-rss' },    
+  { title: 'Cotact', component: ContactPage, icon: 'md-mail' },
+
   ];
   loggedInPages: PageInterface[] = [
-    { title: 'Account', component: AccountPage, icon: 'person' },
-    { title: 'Logout', component: TabsPage, icon: 'log-out', logsOut: true }
+  { title: 'Account', component: AccountPage, icon: 'person' },
+  { title: 'Logout', component: TabsPage, icon: 'log-out', logsOut: true }
   ];
   loggedOutPages: PageInterface[] = [
-    { title: 'Login', component: LoginPage, icon: 'log-in' },
+  { title: 'Login', component: LoginPage, icon: 'log-in' },
   
   ];
   rootPage: any;
@@ -65,7 +66,7 @@ export class ESSPL {
     //public storage: Storage,
     public statusBar: StatusBar, 
     public splashScreen: SplashScreen
-  ) {
+    ) {
     // Call any initial plugins when ready
     platform.ready().then(() => {
       statusBar.styleDefault();
@@ -77,15 +78,15 @@ export class ESSPL {
       if (hasSeenTutorial === null) {
         console.log(hasSeenTutorial);
         // User has not seen tutorial
-        this.rootPage = TutorialPage;
+        this.rootPage = MapPage;
       }
       else{
-                // User has seen tutorial
+        // User has seen tutorial
 
         this.checkMore();
       }
-    
-     
+
+
       
     });
 
@@ -99,18 +100,22 @@ export class ESSPL {
   }
   checkMore(){
 
-        this.userData.hasLoggedIn().then((hasLoggedIn)=> {
-          console.log(hasLoggedIn,'logIn');
-          if(hasLoggedIn === 'true'){
-            this.rootPage = TabsPage;
-          }
-           else  {
-        this.rootPage = LoginPage;
+    this.userData.hasLoggedIn().then((hasLoggedIn)=> {
+      console.log(hasLoggedIn,'logIn');
+      if(hasLoggedIn === 'true'){
+        this.rootPage = TabsPage;
       }
-        })
+      else  {
+        //while running in phone
+        /*this.rootPage = LoginPage;*/
+        
+        //while running in web
+        this.rootPage = MapPage;
+      }
+    })
 
 
-      
+
   }
 
   openPage(page: PageInterface) {

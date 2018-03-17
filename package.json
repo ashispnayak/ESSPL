@@ -48,8 +48,6 @@
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-sqlite-storage": "^2.2.1",
 
-    "cordova-plugin-geolocation": "^4.0.1",
-
     "firebase": "^4.11.0",
     "ionic-angular": "3.1.0",
     "ionicons": "3.0.0",
@@ -78,7 +76,9 @@
       "cordova-plugin-geolocation": {
         "GEOLOCATION_USAGE_DESCRIPTION": "To locate user"
       },
-
+      "cordova-plugin-googleplus" : {
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.691458927450-83m5t20bvc324ldbov6q0lk94bas0g1l"
+      },
       "cordova-plugin-device": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-ionic-webview": {},
@@ -99,10 +99,6 @@
       "android"
     ]
 
-      "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.691458927450-83m5t20bvc324ldbov6q0lk94bas0g1l"
-      }
-    }
-
   }
+
 }

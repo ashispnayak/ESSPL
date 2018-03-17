@@ -61,7 +61,8 @@ declare var google;
      public navParams: NavParams,
      public firebase: Firebase,
      public serviceProvider: ServiceProvider,
-     public userdata: UserData) {
+     public userdata: UserData,
+     public storage: Storage) {
      this.platform.ready().then(() => this.loadMaps());
    }
 
