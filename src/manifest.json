@@ -1,6 +1,6 @@
 {
-    "name": "ION2 Location",
-    "short_name": "ION2Location",
+    "name": "ESSPL",
+    "short_name": "ESSPL App",
     "start_url": "index.html",
     "display": "standalone",
     "icons": [{

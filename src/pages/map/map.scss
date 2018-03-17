@@ -76,6 +76,20 @@ page-map {
     width:50px;
     cursor:pointer;
   }
+  .bookButonView{
+    position:relative;
+    /*url of the marker*/
+/*    background:url(../assets/icon/marker.png) no-repeat;*/
+    /*center the marker*/
+    bottom:13%;
+    z-index:1;
+    align-content: center;
+    text-align:center;
+  }
+  .bookButton{
+    width: 150px;
+  }
+  
   .current-location {
     position: absolute;
     // background-color: #fff !important;

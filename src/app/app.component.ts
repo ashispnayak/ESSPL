@@ -17,7 +17,7 @@ import { AboutPage } from '../pages/about/about';
 import { SubscribePage } from '../pages/subscribe/subscribe';
 import { ContactPage } from '../pages/contact/contact';
 
-import { UserData } from '../providers/user-data';
+import { UserData } from '../providers/userdata';
 
 export interface PageInterface {
   title: string;
