@@ -2,6 +2,8 @@ import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, Platform } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 
+import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, CameraPosition, MarkerOptions, Marker} from '@ionic-native/google-maps';
+
 import { Firebase } from '@ionic-native/firebase';
 
 import { Observable } from 'rxjs/Observable';
@@ -351,8 +353,22 @@ import { UserData } from '../../providers/userdata';
 
        console.log(JSON.stringify(result));
        let rides =  JSON.stringify(result);
+       var obj = JSON.parse(rides.toString());
+       var carLocation, carName;
+       for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                carLocation = (JSON.stringify(obj[key].location));
+                carName = (JSON.stringify(obj[key].name));
+                console.log(carLocation);
+                this.placeRidesOnMap(carLocation,carName);
+                break;
+            }
+        }
 
-       this.placeRidesOnMap(rides.car1.location,"car1")
+       //console.log(obj.car1);
+
+
+       
 
        this.userdata.dismiss_loading();
        //return this.api.getMobileStatus(countryId,this.userdata.number);  
@@ -370,11 +386,32 @@ import { UserData } from '../../providers/userdata';
    }
 
    placeRidesOnMap(LatLng,carName){
-     var marker = new google.maps.Marker({
-       position: LatLng,
-       map: this.map,
-       title: carName
-     });
+     console.log(LatLng);
+     let latLng = new google.maps.LatLng(LatLng.latitude, LatLng.longitude);
+
+ // Wait the MAP_READY before using any methods.
+    this.map.one(GoogleMapsEvent.MAP_READY)
+      .then(() => {
+        console.log('Map is ready!');
+
+        // Now you can use all methods safely.
+        this.map.addMarker({
+            title: carName,
+            icon: 'blue',
+            animation: 'DROP',
+            position: {
+              lat: LatLng.latitude,
+              lng: LatLng.longitude
+            }
+          })
+          .then(marker => {
+            marker.on(GoogleMapsEvent.MARKER_CLICK)
+              .subscribe(() => {
+                alert('clicked');
+              });
+          });
+
+      });
    }
 
    updateRideLocationService(latitude,longitude,carname){
