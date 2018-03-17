@@ -1,6 +1,8 @@
 import { Component, NgZone } from '@angular/core';
 import { ViewController  } from 'ionic-angular';
 import {googlemaps} from 'googlemaps';
+declare var google;
+
 
 @Component({
     templateUrl: 'autocomplete.html'

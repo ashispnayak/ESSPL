@@ -1,15 +1,18 @@
 import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, Platform } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Storage } from '@ionic/storage';
 
 import { Firebase } from '@ionic-native/firebase';
 
 import { Observable } from 'rxjs/Observable';
-import { Storage } from '@ionic/storage';
 import { SpinnerProvider } from '../../providers/spinner/spinner'
 import { MapProvider } from '../../providers/map/map';
 import { ServiceProvider } from '../../providers/service/service';
 import { UserData } from '../../providers/userdata';
+
+declare var google;
+
 
 /**
  * Generated class for the MapPage page.
@@ -63,7 +66,7 @@ import { UserData } from '../../providers/userdata';
    }
 
    loadMaps() {
-
+     this.storage.set('hasLoggedIn', 'true');
      this.initializeMap();
      this.initAutocomplete();
      this.initAutocompleteDrop();
