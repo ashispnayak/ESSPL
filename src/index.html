@@ -43,8 +43,32 @@
     <script src="build/main.js"></script>
 
     <!-- google maps script is loaded last as to not block rendering -->
-     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUp3JLONRiauEaCLve5l-XB4gT0fiDadQ&libraries=places"></script>
 
+     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDBmm5iDo1-tzbDG-IKxBQzmisKXds7U24"></script>
+
+
+  <!-- The vendor js is generated during the build process
+       It contains all of the dependencies in node_modules -->
+  <script src="build/vendor.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBl-oMY2Gva1w9j4lA2sC_IUnYr3odMDBI",
+    authDomain: "esspl-testing.firebaseapp.com",
+    databaseURL: "https://esspl-testing.firebaseio.com",
+    projectId: "esspl-testing",
+    storageBucket: "esspl-testing.appspot.com",
+    messagingSenderId: "57228223183"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase-messaging.js"></script>
 </body>
 
 </html>

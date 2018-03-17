@@ -1,12 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from "@angular/http";
 import { ErrorHandler, NgModule } from '@angular/core';
+import { Http, Headers, RequestOptions} from '@angular/http';
+import {HttpModule} from '@angular/http';
+
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ESSPL } from './app.component';
 import { Geolocation } from '@ionic-native/geolocation';
+
+import { Firebase } from '@ionic-native/firebase';
+import { Network } from '@ionic-native/network';
+//import { File } from '@ionic-native/file';
+import { Storage } from '@ionic/storage';
 import firebase from 'firebase';
 
 import { AboutPage } from '../pages/about/about';
@@ -27,10 +34,20 @@ import { SupportPage } from '../pages/support/support';
 import { AutocompletePage } from '../pages/autocomplete/autocomplete';
 
 import { OffersData } from '../providers/offers-data';
-import { UserData } from '../providers/user-data';
+import { UserData } from '../providers/userdata';
 import { Utility } from '../providers/utility';
 import { SpinnerProvider } from '../providers/spinner/spinner';
 import { MapProvider } from '../providers/map/map';
+
+import { ServiceProvider } from '../providers/service/service';
+
+import { Connectivity } from '../services/connectivity';
+
+
+export function provideStorage() {
+ return new Storage({ name: 'esspldb' });
+}
+
 export const firebaseConfig={
    apiKey: "AIzaSyBrBaAvyALhPRjfg41qCf5isMMyaffIebE",
     authDomain: "esspl-c3a5b.firebaseapp.com",
@@ -85,10 +102,15 @@ firebase.initializeApp(firebaseConfig)
   providers: [
     StatusBar,
     Geolocation,
+    Firebase,
     GooglePlus,
     SplashScreen,
+    Connectivity,
+    { provide: Storage, useFactory: provideStorage },
+    Firebase,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    UserData, Utility, OffersData, SpinnerProvider, MapProvider
+    UserData, Utility, OffersData, SpinnerProvider, MapProvider,
+    ServiceProvider
     
   ]
 })
