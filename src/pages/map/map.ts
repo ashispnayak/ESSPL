@@ -517,9 +517,10 @@ declare var google;
      .subscribe((token: string) => console.log(`Got a new token ${token}`));
    }
 
-   loadMap() {
-
-
+   zoomToLocation(latitude,longitude,zoom) {
+       var location = new google.maps.LatLng(latitude, longitude);
+       this.map.setCenter(location);
+       this.map.setZoom(zoom);
    }
 
    bookARide(){
@@ -565,7 +566,7 @@ declare var google;
      }).then((result) => {
        //act as per results of api
        console.log(JSON.stringify(result));
-       //this.userdata.setValue("bookingID",JSON.stringify(result).name)
+       this.zoomToLocation(this.origin_latitude,this.origin_longitude,20);
        this.userdata.dismiss_loading();
        //setTimeout(this.updateRiderLocationService(),10000);
      }).catch((error) => {
@@ -573,6 +574,12 @@ declare var google;
        console.log("Error updating location of rider" + error);
        console.log(JSON.stringify(error));
      });
+
+   }
+
+   rideType(){
+     this.userdata.rideType = this.userdata.rideType == "Reserve" ? "Share" : "Reserve";
+     this.userdata.setValue("rideType",this.userdata.rideType);
 
    }
  }

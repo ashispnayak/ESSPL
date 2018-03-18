@@ -7,6 +7,7 @@ import { Firebase } from '@ionic-native/firebase';
 export class UserData {
 
   public userType: string; //rider or driver
+  public rideType: string = "Reserve"; // share or reserve
 
 
   public db: string;
