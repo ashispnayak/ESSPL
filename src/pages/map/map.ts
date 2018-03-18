@@ -48,6 +48,8 @@ declare var google;
    place_id = '';
    origin_placeId = '';
    destination_placeId = '';
+   origin_latitude = '';
+   origin_longitude = '';
    public centerMarker :any;
 
    constructor(public navCtrl: NavController,
@@ -86,7 +88,7 @@ declare var google;
      this.zone.run(() => {
        var mapEle = this.mapElement.nativeElement;
        this.map = new google.maps.Map(mapEle, {
-         zoom: 16,
+         zoom: 14,
          mapTypeControl: false,
          center: { lat: 12.971599, lng: 77.594563 },
          mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -97,14 +99,14 @@ declare var google;
          scaleControl: true,
        });
 
-       let CentralPark = new google.maps.LatLng(parseFloat("20.296139201680244"),parseFloat("85.82539810688479"));
-       console.log(CentralPark.toString);
-       let marker = new google.maps.Marker({
-         position: CentralPark,
-         map: this.map
-       });
+       // let CentralPark = new google.maps.LatLng(parseFloat("20.296139201680244"),parseFloat("85.82539810688479"));
+       // console.log(CentralPark.toString);
+       // let marker = new google.maps.Marker({
+       //   position: CentralPark,
+       //   map: this.map
+       // });
 
-       console.log(marker.getMap);
+       // console.log(marker.getMap);
        // Map drag started
        this.map.addListener('dragstart', function() {
          console.log('Drag start');
@@ -118,11 +120,11 @@ declare var google;
          let map_center = that.getMapCenter();
          let latLngObj = {'lat': map_center.lat(), 'long': map_center.lng() };
          console.log(latLngObj);
-         try{
-           that.getAddress(latLngObj,'ORIGIN');
-         }catch(exception){
-           console.log(exception + "hauci");
-         }
+         // try{
+         //   that.getAddress(latLngObj,'ORIGIN');
+         // }catch(exception){
+         //   console.log(exception + "hauci");
+         // }
        });
 
        google.maps.event.addListenerOnce(this.map, 'idle', () => {
@@ -143,8 +145,10 @@ declare var google;
      this.directionsDisplay.setMap(this.map);
      this.centerMarker = document.getElementsByClassName("centerMarker"); 
 
-     //update user location every 5 seconds
+     //update user location every 15 seconds
      this.updateRiderLocationService();
+     //get all the riders nearby
+     this.fetchNearByRides('RESERVE');
    }
 
    initAutocomplete(): void {
@@ -191,8 +195,8 @@ declare var google;
        // Display  Marker
        this.map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
        this.getAddress(latLngObj,'ORIGIN');
-       this.spinner.dismiss();
        localStorage.setItem('current_latlong', JSON.stringify(latLngObj));
+       this.spinner.dismiss();
        return latLngObj;
 
      }, (err) => {
@@ -201,10 +205,12 @@ declare var google;
    }
 
    getCurrentLocation(): Promise<any> {
+    // this.userdata.show_loading("Searching You...");
      return new Promise((resolve, reject) => {
        this.geolocation.getCurrentPosition()
        .then((position) => {
          let latLngObj = {'lat': position.coords.latitude, 'long': position.coords.longitude};
+        // this.userdata.dismiss_loading();
          resolve(latLngObj);
        }, (error) => {
          reject(error);
@@ -218,6 +224,7 @@ declare var google;
      console.log("6" + purpose);
      // Get the address object based on latLngObj
      var place_id;
+     let location: any;
      this.mapService.getStreetAddress(latLngObj).subscribe(
        s_address => {
          if (s_address.status == "ZERO_RESULTS") {
@@ -225,8 +232,9 @@ declare var google;
              address => {
                this.address = address.results[0].formatted_address;
                place_id = (address.results[0].place_id);
-               console.log(place_id);
-               this.assignPlaceIds(place_id,purpose,this.address);
+               location = (address.results[0].geometry.location);
+               console.log(address.results[0].geometry.location);
+               this.assignPlaceIds(place_id,purpose,this.address,location);
                this.getAddressComponentByPlace(address.results[0], latLngObj);
              },
              err => console.log("Error in getting the street address " + err)
@@ -234,8 +242,9 @@ declare var google;
          } else {
            this.address = s_address.results[0].formatted_address;
            place_id = (s_address.results[0].place_id);
-           console.log(place_id);
-           this.assignPlaceIds(place_id,purpose,this.address);
+           location = (s_address.results[0].geometry.location);
+           console.log(s_address.results[0].geometry.location);
+           this.assignPlaceIds(place_id,purpose,this.address,location);
            this.getAddressComponentByPlace(s_address.results[0], latLngObj);
          }
 
@@ -246,12 +255,15 @@ declare var google;
        );
    }
 
-   assignPlaceIds(place_id,purpose,address){
+   assignPlaceIds(place_id,purpose,address,location){
      if(place_id != null){
        if(purpose == 'ORIGIN'){
-         console.log("originwala");
+         console.log("originwala",location);
          //document.getElementById("origin_address").innerText = address;
          this.origin_placeId = place_id;
+         this.origin_latitude = location.lat;
+         this.origin_longitude = location.lng;
+         console.log(this.origin_longitude,this.origin_latitude);
        }else{
          console.log("destinationwala");
          //document.getElementById("destination_address").innerText = address;
@@ -331,8 +343,8 @@ declare var google;
    bookRide() {
      console.log("7");
      this.travelMode = 'DRIVING';
-     console.log(  this.origin_placeId);
-     console.log( this.destination_placeId );
+     console.log(this.origin_placeId);
+     console.log(this.destination_placeId );
 
      if(this.origin_placeId == ''){
        alert("Please select pick up point");
@@ -354,6 +366,7 @@ declare var google;
        if (status2 === 'OK') {
          //hide the center marker
          //        this.centerMarker.visibility = 'hide';
+         
          this.directionsDisplay.setDirections(response);
        } else {
          window.alert('Directions request failed due to ' + status);
@@ -465,7 +478,6 @@ declare var google;
      Promise.resolve("proceed")
      .then((proceed) => {
        //TODO : to be removed once login is done
-       this.userdata.show_loading("Searching You...");
        return this.userdata.setValue("userNumber","7504429196");
      })
      .then((proceed) => {
@@ -489,7 +501,6 @@ declare var google;
      }).then((result) => {
        //act as per results of api
        console.log(JSON.stringify(result));
-       this.userdata.dismiss_loading();
        //setTimeout(this.updateRiderLocationService(),10000);
      }).catch((error) => {
        console.log("Error updating location of rider" + error);
@@ -502,13 +513,66 @@ declare var google;
      this.firebase.getToken()
      .then(token => console.log(`The token is ${token}`)) // save the token server-side and use it to push notifications to this device
      .catch(error => console.error('Error getting token', error));
-
      this.firebase.onTokenRefresh()
      .subscribe((token: string) => console.log(`Got a new token ${token}`));
    }
 
    loadMap() {
 
+
+   }
+
+   bookARide(){
+     //post location, name, rating to open_bookings
+     if(this.origin_latitude == '' || this.origin_longitude ==''){
+       this.userdata.pop_alert("No Rides!","Please select your origin address first!",['OK']);
+       return;
+     }
+
+    var userNumber, userRating, userRideType, userStatus;
+    Promise.resolve("proceed")
+     .then((proceed) => {
+       //TODO : to be removed once login is done
+       return this.userdata.setValue("userNumber","7504429196");
+     })
+     .then((proceed) => {
+       this.userdata.show_loading("Getting A Ride...");
+       return this.userdata.getValue("userRating");
+     }).then((result) => {
+       userRating = result;
+       return this.userdata.getValue("userStatus");
+     }).then((result) => {
+       userStatus = result;
+       return this.userdata.getValue("userRideType");
+     }).then((result) => {
+       userRideType = result;
+
+       let location = {
+         "latitude" : this.origin_latitude,
+         "logitude" : this.origin_longitude
+       };
+       let body = {
+         location : location,
+         userRating : userRating,
+         userStatus : userStatus,
+         userRideType : userRideType
+       }
+       let values = {
+         body : body,
+         method : "put"
+       };
+       return this.serviceProvider.openABooking(userNumber,values);
+     }).then((result) => {
+       //act as per results of api
+       console.log(JSON.stringify(result));
+       //this.userdata.setValue("bookingID",JSON.stringify(result).name)
+       this.userdata.dismiss_loading();
+       //setTimeout(this.updateRiderLocationService(),10000);
+     }).catch((error) => {
+       this.userdata.dismiss_loading();
+       console.log("Error updating location of rider" + error);
+       console.log(JSON.stringify(error));
+     });
 
    }
  }

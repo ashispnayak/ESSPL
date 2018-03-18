@@ -54,7 +54,7 @@ export class ServiceProvider {
     public callApi(url:string, options:any={}):Promise<any> {
         return new Promise((resolve, reject) => {
         	let baseURL:string = "https://esspl-testing.firebaseio.com";
-            console.log(options);
+            console.log(JSON.stringify(options));
             let fullUrl:string = baseURL
                                + "/" 
                                + url.replace(/^\//,'')
@@ -117,6 +117,10 @@ export class ServiceProvider {
 
     updateDriverLocation(name,values):Promise<any> { 
         return this.callApi("drivers/" + name + "/location",values);
+    }
+
+    openABooking(userNumber,values):Promise<any> { 
+        return this.callApi("open_bookings/" + userNumber,values);
     }
 
     getMobileStatus(countryId,mobileNumber):Promise<any> { 

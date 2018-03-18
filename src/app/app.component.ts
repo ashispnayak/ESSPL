@@ -73,6 +73,10 @@ export class ESSPL {
       splashScreen.hide();
     });
 
+    this.userData.setValue("userNumber","7504429196");
+    this.userData.setValue("userRating","4.1");
+    this.userData.setValue("userStatus","Searching"); //Searching or Riding or Unavailable
+    this.userData.setValue("userRideType","SHARE"); //RESERVE or SHARE
     // Check if the user has already seen the tutorial
     this.userData.checkHasSeenTutorial().then((hasSeenTutorial) => {
       if (hasSeenTutorial === null) {
