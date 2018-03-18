@@ -100,55 +100,58 @@ declare var google;
        let CentralPark = new google.maps.LatLng(parseFloat("20.296139201680244"),parseFloat("85.82539810688479"));
        console.log(CentralPark.toString);
        let marker = new google.maps.Marker({
-               position: CentralPark,
-               map: this.map
-         });
-
-     console.log(marker.getMap);
-         // Map drag started
-         this.map.addListener('dragstart', function() {
-           console.log('Drag start');
-         });
-         // Map dragging
-         this.map.addListener('drag', function() {
-           that.address = 'Searching...';
-         });
-         //Reload markers every time the map moves
-         this.map.addListener('dragend', function() {
-           let map_center = that.getMapCenter();
-           let latLngObj = {'lat': map_center.lat(), 'long': map_center.lng() };
-           console.log(latLngObj);
-           try{
-             that.getAddress(latLngObj,'ORIGIN');
-           }catch(exception){
-             console.log(exception + "hauci");
-           }
-         });
-
-         google.maps.event.addListenerOnce(this.map, 'idle', () => {
-           google.maps.event.trigger(this.map, 'resize');
-           mapEle.classList.add('show-map');
-         });
-
-         google.maps.event.addListener(this.map, 'bounds_changed', () => {
-           this.zone.run(() => {
-             this.resizeMap();
-           });
-         });
-
-
+         position: CentralPark,
+         map: this.map
        });
+
+       console.log(marker.getMap);
+       // Map drag started
+       this.map.addListener('dragstart', function() {
+         console.log('Drag start');
+       });
+       // Map dragging
+       this.map.addListener('drag', function() {
+         that.address = 'Searching...';
+       });
+       //Reload markers every time the map moves
+       this.map.addListener('dragend', function() {
+         let map_center = that.getMapCenter();
+         let latLngObj = {'lat': map_center.lat(), 'long': map_center.lng() };
+         console.log(latLngObj);
+         try{
+           that.getAddress(latLngObj,'ORIGIN');
+         }catch(exception){
+           console.log(exception + "hauci");
+         }
+       });
+
+       google.maps.event.addListenerOnce(this.map, 'idle', () => {
+         google.maps.event.trigger(this.map, 'resize');
+         mapEle.classList.add('show-map');
+       });
+
+       google.maps.event.addListener(this.map, 'bounds_changed', () => {
+         this.zone.run(() => {
+           this.resizeMap();
+         });
+       });
+
+
+     });
 
      //new this.AutocompleteDirectionsHandler(this.map);
      this.directionsDisplay.setMap(this.map);
      this.centerMarker = document.getElementsByClassName("centerMarker"); 
+
+     //update user location every 5 seconds
+     this.updateRiderLocationService();
    }
 
    initAutocomplete(): void {
-     console.log("3");
+     //console.log("3");
      this.addressElement = this.searchbar.nativeElement.querySelector('.searchbar-input');
      this.addressElement.setAttribute("id","origin_address");
-     console.log(this.addressElement);
+     //console.log(this.addressElement);
      this.createAutocomplete(this.addressElement,'ORIGIN').subscribe((location) => {
        //console.log('Searchdata' + location.lat());
        let latLngObj = {'lat': location.lat(), 'long': location.lng()};
@@ -163,10 +166,10 @@ declare var google;
    }
 
    initAutocompleteDrop(): void {
-     console.log("4");
+     //console.log("4");
      this.addressElement = this.dropsearchbar.nativeElement.querySelector('.searchbar-input');
      this.addressElement.setAttribute("id","destination_address");
-     console.log(this.addressElement);
+     //console.log(this.addressElement);
      this.createAutocomplete(this.addressElement,'DESTINATION').subscribe((location) => {
        //console.log('Searchdata' + location.lat());
        let latLngObj = {'lat': location.lat(), 'long': location.lng()};
@@ -180,7 +183,7 @@ declare var google;
    }
 
    currentLocation() {
-     console.log("5");
+
      this.spinner.load();
      this.geolocation.getCurrentPosition().then((position) => {
        let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -190,13 +193,26 @@ declare var google;
        this.getAddress(latLngObj,'ORIGIN');
        this.spinner.dismiss();
        localStorage.setItem('current_latlong', JSON.stringify(latLngObj));
-       this.getAddress(latLngObj,'ORIGIN');
        return latLngObj;
 
      }, (err) => {
        console.log(err);
      });
    }
+
+   getCurrentLocation(): Promise<any> {
+     return new Promise((resolve, reject) => {
+       this.geolocation.getCurrentPosition()
+       .then((position) => {
+         let latLngObj = {'lat': position.coords.latitude, 'long': position.coords.longitude};
+         resolve(latLngObj);
+       }, (error) => {
+         reject(error);
+       });
+     });
+   }
+
+
 
    getAddress(latLngObj, purpose) {
      console.log("6" + purpose);
@@ -365,8 +381,8 @@ declare var google;
      }).then((result) => {
 
        //console.log(JSON.stringify(result));
-       let rides =  JSON.stringify(result);
-       var obj = JSON.parse(rides.toString());
+       let drivers =  JSON.stringify(result);
+       var obj = JSON.parse(drivers.toString());
        var carLocation, carName, i=0, type;
        let latitude : any, longitude: any;
        for (var key in obj) {
@@ -412,14 +428,14 @@ declare var google;
      //console.log(marker.getMap);
    }
    toggleBounce() {
-    if (this.marker.getAnimation() !== null) {
-      this.marker.setAnimation(null);
-    } else {
-      this.marker.setAnimation(google.maps.Animation.BOUNCE);
-    }
-  }
+     if (this.marker.getAnimation() !== null) {
+       this.marker.setAnimation(null);
+     } else {
+       this.marker.setAnimation(google.maps.Animation.BOUNCE);
+     }
+   }
 
-   updateRideLocationService(latitude,longitude,carname){
+   updateDriverLocationService(latitude,longitude,carname){
 
      Promise.resolve("proceed")
      .then((proceed) => {
@@ -431,11 +447,50 @@ declare var google;
          body : body,
          method : "put"
        };
-       return this.serviceProvider.updateRideLocation(carname,values);;
+       return this.serviceProvider.updateDriverLocation(carname,values);;
      }).then((result) => {
        //act as per results of api
 
        console.log(JSON.stringify(result));
+     }).catch((error) => {
+       console.log("Error updating location of rider" + error);
+       console.log(JSON.stringify(error));
+     });
+
+   }
+
+   updateRiderLocationService(){
+     var userNumber;
+
+     Promise.resolve("proceed")
+     .then((proceed) => {
+       //TODO : to be removed once login is done
+       this.userdata.show_loading("Searching You...");
+       return this.userdata.setValue("userNumber","7504429196");
+     })
+     .then((proceed) => {
+
+       return this.userdata.getValue("userNumber");
+     }).then((result) => {
+       userNumber = result;
+       return this.getCurrentLocation();
+     }).then((latLngObj : any) => {
+       console.log(latLngObj);
+       console.log(JSON.stringify(latLngObj));
+       let body = {
+         "latitude" : latLngObj.lat,
+         "logitude" : latLngObj.long
+       };
+       let values = {
+         body : body,
+         method : "put"
+       };
+       return this.serviceProvider.updateRideLocation(userNumber,values);
+     }).then((result) => {
+       //act as per results of api
+       console.log(JSON.stringify(result));
+       this.userdata.dismiss_loading();
+       //setTimeout(this.updateRiderLocationService(),10000);
      }).catch((error) => {
        console.log("Error updating location of rider" + error);
        console.log(JSON.stringify(error));

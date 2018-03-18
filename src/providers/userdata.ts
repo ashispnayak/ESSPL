@@ -6,6 +6,9 @@ import { Firebase } from '@ionic-native/firebase';
 @Injectable()
 export class UserData {
 
+  public userType: string; //rider or driver
+
+
   public db: string;
   public uid: number;
   public dob: string;
@@ -82,6 +85,16 @@ export class UserData {
     });
   }
 
+  setValue(key,data): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.localdb.set(key,data).then((value) => {
+        resolve(value);
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
   setErrorAlert(title: string,message: string){
     this.error_show.title = title;
     this.error_show.message = message;
@@ -150,33 +163,6 @@ export class UserData {
     this.countriesInfo = "";
     this.localdb.clear();
   }
-
-  // static deserialize_products(jsonObjects):Array<Product> {
-  //   let products = [];
-  //   for (let jsonObj of jsonObjects) {
-  //     let product;
-  //     product.deserialize(jsonObj);
-  //     products.push(product);
-  //   }
-  //   return products;
-  // }
-
-  // set_selected_product(product: Product) {
-  //     // wipe out the current selected_product data first
-  //     this.selected_product = undefined;
-  //     this.selected_product = new Product();
-  //   this.selected_product.deserialize(product);
-  // }
-
-
-  // showHideAdBanner() {
-	// 	if (this.platform.is("ios")) {
-	// 		/* Hack to hide then show ad banner so that App View can resize window to prevent
-	// 		content from being overlapped by Ad banner .*/
-	// 		this.admob.hideBanner();
-	// 		this.admob.showBanner(this.admob.AD_POSITION.BOTTOM_CENTER);
-	// 	}
-	// }
 
 
 	static process_messages_read_state(messages: Array<any> = []) {

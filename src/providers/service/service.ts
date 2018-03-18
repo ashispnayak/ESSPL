@@ -108,16 +108,16 @@ export class ServiceProvider {
     }
 
     getRidesInformation():Promise<any> { 
-        return this.callApi("rides");
+        return this.callApi("drivers");
     }
 
-    updateRideLocation(name,values):Promise<any> { 
-        return this.callApi("rides/" + name + "/location",values);
+    updateRideLocation(number,values):Promise<any> { 
+        return this.callApi("riders/" + number + "/location",values);
     }
 
-
-
-
+    updateDriverLocation(name,values):Promise<any> { 
+        return this.callApi("drivers/" + name + "/location",values);
+    }
 
     getMobileStatus(countryId,mobileNumber):Promise<any> { 
         return this.callApi("mobiles/" + mobileNumber + "/countries/" + countryId + "/status");

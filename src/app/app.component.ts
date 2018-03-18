@@ -108,14 +108,10 @@ export class ESSPL {
       else  {
         //while running in phone
         /*this.rootPage = LoginPage;*/
-        
         //while running in web
         this.rootPage = MapPage;
       }
     })
-
-
-
   }
 
   openPage(page: PageInterface) {

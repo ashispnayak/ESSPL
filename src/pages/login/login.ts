@@ -6,6 +6,7 @@ import { Http, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import{ AngularFireModule } from 'angularfire2';
 import { Storage } from '@ionic/storage';
+import { UserData } from '../../providers/userdata';
 
 import firebase from 'firebase';
 @Component({
@@ -20,7 +21,9 @@ export class LoginPage {
   driverUser:boolean;
   rideUser:boolean;
 
-  constructor(public navCtrl: NavController, public storage: Storage,public googleplus:GooglePlus, private loadingController:LoadingController, public http:Http  ) {
+  constructor(public navCtrl: NavController, public storage: Storage,
+    public googleplus:GooglePlus, private loadingController:LoadingController,
+    public http:Http, public userdata:UserData ) {
     this.driverUser=false;
     this.rideUser=false;
   }
@@ -62,15 +65,10 @@ export class LoginPage {
   });
   
   }
-  driver(){
+  userType(type){
     this.hide=true;
-    this.driverUser=true;
-    console.log(this.driverUser);
-  }
-  ride_user(){
-    this.hide=true;
-    this.rideUser=true;
-    console.log(this.rideUser);
+    this.userdata.userType = type;
+    this.storage.set("userType",type);
   }
 
 
