@@ -1,0 +1,91 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>{{offer.name}}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-fab right top>
+        <button ion-fab color="secondary">
+                <ion-icon name="pin" ></ion-icon>
+            </button>
+    </ion-fab>
+    <ion-card>
+        <img [src]="offer.banner">
+        <ion-row>
+            <ion-col>
+                <button ion-button icon-left clear small color="light">
+                    <ion-icon name="thumbs-up"></ion-icon>
+                    <div>{{offer.likes}}</div>
+                </button>
+            </ion-col>
+            <ion-col>
+                <button ion-button icon-left clear small color="light">
+                <ion-icon name="md-eye"></ion-icon>
+                    <div>{{offer.views}}</div>
+                </button>
+            </ion-col>
+            <ion-col center text-center>
+                <button ion-button icon-left clear small color="light">
+                    <ion-icon name="md-pin"></ion-icon>
+                    <div>< {{offer.distance}}</div>
+                 </button>
+            </ion-col>
+
+            <ion-col center text-center>
+                <button ion-button icon-left clear small (click)="openShare(group)" color="light">
+                    <ion-icon name="share"></ion-icon>
+                 </button>
+            </ion-col>
+        </ion-row>
+        <ion-item>
+            <ion-icon color="danger" name="md-timer" item-left large></ion-icon>
+            <p>{{offer.address}}</p>
+            <p>
+                {{offer.date}} @ {{offer.time}}
+            </p>
+        </ion-item>
+        <ion-card-content>
+            <p>
+                {{offer.desc}} Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+            </p>
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <b>Gallery</b>
+        </ion-card-header>
+        <ion-item>
+            <ion-slides pager>
+                <ion-slide>
+                    <img src="assets/img/dummy/eagle.jpg">
+                </ion-slide>
+                <ion-slide>
+                    <img src="assets/img/dummy/lion.jpg">
+                </ion-slide>
+                <ion-slide>
+                    <img src="assets/img/dummy/iguana.jpg">
+                </ion-slide>
+            </ion-slides>
+        </ion-item>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <b>Commnets</b>
+        </ion-card-header>
+        <ion-item text-wrap>
+            <ion-icon name="football" color="primary" item-left large></ion-icon>
+            <h2>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</h2>
+            <p>5 min ago</p>
+        </ion-item>
+        <ion-item text-wrap>
+            <ion-icon name="wine" item-left large color="primary"></ion-icon>
+            <h2>Lorem ipsum dolor sit amet, consectetuer adipiscing elit</h2>
+            <p>2 hours ago</p>
+        </ion-item>
+    </ion-card>
+
+
+
+
+</ion-content>

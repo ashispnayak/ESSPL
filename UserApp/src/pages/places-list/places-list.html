@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>Places</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="card-background-page">
+    <ion-card (click)="goToDetail(null)">
+        <img src="assets/img/dummy/p1.jpeg" />
+        <div class="card-title">São Paulo</div>
+        <div class="card-subtitle">
+            < 4 KM </div>
+    </ion-card>
+    <ion-card (click)="goToDetail(null)">
+        <img src="assets/img/dummy/p3.png" />
+        <div class="card-title">San Francisco</div>
+        <div class="card-subtitle">
+            < 4 KM</div>
+    </ion-card>
+
+    <ion-card (click)="goToDetail(null)">
+        <img src="assets/img/dummy/p4.jpeg" />
+        <div class="card-title">Madison</div>
+        <div class="card-subtitle">
+            < 4 KM</div>
+    </ion-card>
+</ion-content>

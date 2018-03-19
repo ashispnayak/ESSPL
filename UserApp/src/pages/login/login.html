@@ -1,0 +1,78 @@
+<ion-header>
+  <style>
+ion-content{
+background-image: url("assets/img/login.jpeg");
+background-repeat: no-repeat;
+background-size: cover;
+background-position: left top;
+}
+@media(min-width: 700px ) and (max-width: 999px)
+{
+  button{
+    height: 65px;
+    width: 300px;
+    font-size: 25px;
+  }
+}
+@media(min-width:1000px)
+{
+  button{
+    height: 70x;
+    width: 350px;
+    font-size: 30px;
+  }
+}
+</style>
+
+</ion-header>
+
+<ion-content>
+
+    <div [class.hide]="driverUser||rideUser" style=" position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)" >
+    
+   
+<button  ion-button (click)="driver();" color="primary" >
+ 
+      
+      Use App as a driver
+    </button>
+
+    </div>
+
+    <div [class.hide]="driverUser||rideUser" style=" position: absolute;
+    top: 60%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)" >
+    
+   
+<button  ion-button (click)="ride_user();" color="primary"  >
+ 
+      
+      Use app to book rides
+    </button>
+
+    </div>
+
+<div *ngIf="hide" style=" position: absolute;
+    top: 60%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)" >
+    
+   
+<button  ion-button (click)="login();" color="danger" round item-right icon-left>
+ 
+      <ion-icon name="logo-google"></ion-icon>
+      Sign in with google
+    </button>
+
+    </div>
+
+
+ 
+</ion-content>

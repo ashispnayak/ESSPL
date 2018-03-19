@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Subscribe</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+    <ion-card>
+        <ion-card-content>
+            <ion-list padding>
+                <ion-item>
+                    <ion-icon name="mail" item-right color="primary"></ion-icon>
+                    <ion-input floating type="text" placeholder="Email"></ion-input>
+                </ion-item>
+            </ion-list>
+            <button ion-button block icon-right color="secondary" (click)="subscribe()">
+                Submit
+            </button>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

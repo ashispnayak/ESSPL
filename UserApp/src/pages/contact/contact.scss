@@ -1,0 +1,16 @@
+page-contact {
+    // @each $track, $value in auxiliary-categories() {
+    //  ion-item-sliding[track=#{$track}] ion-label {
+    //    border-left: 2px solid $value;
+    //    padding-left: 10px;
+    //  }
+    // }
+    .item-md,
+    .card-content {
+        background-color: #f5f3f3;
+    }
+    .item-md h2,
+    p {
+        color: #019689 !important
+    }
+}

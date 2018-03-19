@@ -1,0 +1,32 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Contact</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-card>
+        <ion-card-content>
+            <ion-list>
+                <ion-item>
+                    <ion-icon name="md-mail" item-right color="primary"></ion-icon>
+                    <ion-input floating type="text" placeholder="Email"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-icon name="person" item-right color="primary"></ion-icon>
+                    <ion-input floating type="text" placeholder="Name"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-icon name="md-chatboxes" item-right color="primary"></ion-icon>
+                    <ion-textarea floating rows="5" placeholder="Message"></ion-textarea>
+                </ion-item>
+            </ion-list>
+            <button ion-button block icon-right color="secondary">
+                Submit
+            </button>
+        </ion-card-content>
+    </ion-card>
+</ion-content>
