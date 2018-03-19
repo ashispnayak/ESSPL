@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, Platform, ActionSheetController  } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Storage } from '@ionic/storage';
 
@@ -64,7 +64,8 @@ declare var google;
      public firebase: Firebase,
      public serviceProvider: ServiceProvider,
      public userdata: UserData,
-     public storage: Storage) {
+     public storage: Storage,
+     public actionSheetCtrl: ActionSheetController) {
      this.platform.ready().then(() => this.loadMaps());
    }
 
@@ -523,7 +524,7 @@ declare var google;
        this.map.setZoom(zoom);
    }
 
-   bookARide(){
+   bookARide(chooseRide){
      //post location, name, rating to open_bookings
      if(this.origin_latitude == '' || this.origin_longitude ==''){
        this.userdata.pop_alert("No Rides!","Please select your origin address first!",['OK']);
@@ -582,5 +583,44 @@ declare var google;
      this.userdata.setValue("rideType",this.userdata.rideType);
 
    }
- }
- 
+
+  openChooseRide() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Choose Your Ride',
+      buttons: [
+        {
+          text: 'Auto',
+          handler: () => {
+            console.log('Auto clicked');
+            this.bookARide('auto');
+          }
+        },{
+          text: 'Car',
+          handler: () => {
+            console.log('Car clicked');
+            this.bookARide('car');
+          }
+        },{
+          text: 'Van',
+          handler: () => {
+            console.log('Van clicked');
+            this.bookARide('van');
+          }
+        },{
+          text: 'SUV',
+          handler: () => {
+            console.log('SUV clicked');
+            this.bookARide('suv');
+          }
+        },{
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
+}

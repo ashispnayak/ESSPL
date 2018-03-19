@@ -8,16 +8,16 @@
   <ion-toolbar no-border-top>
 <!--         <ion-searchbar (click)="showAddressModal()" [(ngModel)]="address.place.desc" type="text" placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
 </ion-searchbar> -->
-  <ion-searchbar  autocorrect="off" autocapitalize="off" spellcheck="off" #searchbar placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
-  </ion-searchbar>
-  <ion-searchbar autocorrect="off" autocapitalize="off" spellcheck="off" #dropsearchbar id="destination_address" placeholder="Enter Drop point" color="primary" ng-disabled="!pickupPoint" ng-model="dropPoint">
-  </ion-searchbar>
-  <button ion-button color="secondary" center (click)="rideType();">{{ userdata.rideType }}</button>
-  </ion-toolbar>
+<ion-searchbar  autocorrect="off" autocapitalize="off" spellcheck="off" #searchbar placeholder="Enter Pick up point" color="primary" ng-model="pickupPoint">
+</ion-searchbar>
+<ion-searchbar autocorrect="off" autocapitalize="off" spellcheck="off" #dropsearchbar id="destination_address" placeholder="Enter Drop point" color="primary" ng-disabled="!pickupPoint" ng-model="dropPoint">
+</ion-searchbar>
+</ion-toolbar>
 
 </ion-header>
 
 <ion-content class="map-page">
+
   <ion-buttons float-end class="current-location">
 <!--     <button ion-button icon-only (click)="currentLocation()">
       <img src="./assets/icon/current-location.png" alt="">
@@ -28,7 +28,7 @@
   </div>
   <div class="centerMarker"></div>
   <div class="bookButonView">
-    <button ion-button color="secondary" class="bookButton" ng-disabled="!pickupPoint && !dropPoint" (click)="bookARide()">Get A Ride</button>
+    <button ion-button color="secondary" class="bookButton" ng-disabled="!pickupPoint && !dropPoint" (click)="openChooseRide()">Get A Ride</button>
   </div>
   <div class="address-view">
     <ion-list>
