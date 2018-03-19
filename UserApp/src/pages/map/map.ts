@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, Platform, ActionSheetController  } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, Platform, ActionSheetController, ModalController, ModalOptions  } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Storage } from '@ionic/storage';
 
@@ -12,6 +12,7 @@ import { SpinnerProvider } from '../../providers/spinner/spinner'
 import { MapProvider } from '../../providers/map/map';
 import { ServiceProvider } from '../../providers/service/service';
 import { UserData } from '../../providers/userdata';
+import { RideDetailModalPage } from '../ride-detail-modal/ride-detail-modal';
 
 declare var google;
 
@@ -50,7 +51,21 @@ declare var google;
    destination_placeId = '';
    origin_latitude = '';
    origin_longitude = '';
+   destination_latitude = '';
+   destination_longitude = '';
    public centerMarker :any;
+   public driverInformation :any;
+
+   public idealMiniCar : any;
+   public idealSuvCar : any;
+   public idealAuto : any;
+
+   public distancesOfDrivers = [];
+   public durationOfDrivers = [];
+
+   public autoIdeal : any;
+   public suvIdeal : any;
+   public miniCarIdeal : any;
 
    constructor(public navCtrl: NavController,
      public geolocation: Geolocation,
@@ -65,7 +80,8 @@ declare var google;
      public serviceProvider: ServiceProvider,
      public userdata: UserData,
      public storage: Storage,
-     public actionSheetCtrl: ActionSheetController) {
+     public actionSheetCtrl: ActionSheetController,
+     public modalCtrl: ModalController) {
      this.platform.ready().then(() => this.loadMaps());
    }
 
@@ -103,44 +119,44 @@ declare var google;
        // let CentralPark = new google.maps.LatLng(parseFloat("20.296139201680244"),parseFloat("85.82539810688479"));
        // console.log(CentralPark.toString);
        // let marker = new google.maps.Marker({
-       //   position: CentralPark,
-       //   map: this.map
-       // });
+         //   position: CentralPark,
+         //   map: this.map
+         // });
 
-       // console.log(marker.getMap);
-       // Map drag started
-       this.map.addListener('dragstart', function() {
-         console.log('Drag start');
-       });
-       // Map dragging
-       this.map.addListener('drag', function() {
-         that.address = 'Searching...';
-       });
-       //Reload markers every time the map moves
-       this.map.addListener('dragend', function() {
-         let map_center = that.getMapCenter();
-         let latLngObj = {'lat': map_center.lat(), 'long': map_center.lng() };
-         console.log(latLngObj);
-         // try{
-         //   that.getAddress(latLngObj,'ORIGIN');
-         // }catch(exception){
-         //   console.log(exception + "hauci");
-         // }
-       });
-
-       google.maps.event.addListenerOnce(this.map, 'idle', () => {
-         google.maps.event.trigger(this.map, 'resize');
-         mapEle.classList.add('show-map');
-       });
-
-       google.maps.event.addListener(this.map, 'bounds_changed', () => {
-         this.zone.run(() => {
-           this.resizeMap();
+         // console.log(marker.getMap);
+         // Map drag started
+         this.map.addListener('dragstart', function() {
+           console.log('Drag start');
          });
+         // Map dragging
+         this.map.addListener('drag', function() {
+           that.address = 'Searching...';
+         });
+         //Reload markers every time the map moves
+         this.map.addListener('dragend', function() {
+           let map_center = that.getMapCenter();
+           let latLngObj = {'lat': map_center.lat(), 'long': map_center.lng() };
+           console.log(latLngObj);
+           // try{
+             //   that.getAddress(latLngObj,'ORIGIN');
+             // }catch(exception){
+               //   console.log(exception + "hauci");
+               // }
+             });
+
+         google.maps.event.addListenerOnce(this.map, 'idle', () => {
+           google.maps.event.trigger(this.map, 'resize');
+           mapEle.classList.add('show-map');
+         });
+
+         google.maps.event.addListener(this.map, 'bounds_changed', () => {
+           this.zone.run(() => {
+             this.resizeMap();
+           });
+         });
+
+
        });
-
-
-     });
 
      //new this.AutocompleteDirectionsHandler(this.map);
      this.directionsDisplay.setMap(this.map);
@@ -160,7 +176,6 @@ declare var google;
      this.createAutocomplete(this.addressElement,'ORIGIN').subscribe((location) => {
        //console.log('Searchdata' + location.lat());
        let latLngObj = {'lat': location.lat(), 'long': location.lng()};
-
        this.getAddress(latLngObj,'ORIGIN');
        let options = {
          center: location,
@@ -206,12 +221,12 @@ declare var google;
    }
 
    getCurrentLocation(): Promise<any> {
-    // this.userdata.show_loading("Searching You...");
+     // this.userdata.show_loading("Searching You...");
      return new Promise((resolve, reject) => {
        this.geolocation.getCurrentPosition()
        .then((position) => {
          let latLngObj = {'lat': position.coords.latitude, 'long': position.coords.longitude};
-        // this.userdata.dismiss_loading();
+         // this.userdata.dismiss_loading();
          resolve(latLngObj);
        }, (error) => {
          reject(error);
@@ -235,6 +250,7 @@ declare var google;
                place_id = (address.results[0].place_id);
                location = (address.results[0].geometry.location);
                console.log(address.results[0].geometry.location);
+               console.log("44");
                this.assignPlaceIds(place_id,purpose,this.address,location);
                this.getAddressComponentByPlace(address.results[0], latLngObj);
              },
@@ -244,7 +260,7 @@ declare var google;
            this.address = s_address.results[0].formatted_address;
            place_id = (s_address.results[0].place_id);
            location = (s_address.results[0].geometry.location);
-           console.log(s_address.results[0].geometry.location);
+           console.log("45");
            this.assignPlaceIds(place_id,purpose,this.address,location);
            this.getAddressComponentByPlace(s_address.results[0], latLngObj);
          }
@@ -257,6 +273,7 @@ declare var google;
    }
 
    assignPlaceIds(place_id,purpose,address,location){
+     console.log("called");
      if(place_id != null){
        if(purpose == 'ORIGIN'){
          console.log("originwala",location);
@@ -264,10 +281,13 @@ declare var google;
          this.origin_placeId = place_id;
          this.origin_latitude = location.lat;
          this.origin_longitude = location.lng;
-         console.log(this.origin_longitude,this.origin_latitude);
+         this.checkDriversInformation(this.origin_latitude,this.origin_longitude);
+         //this.calculateDistanceOfDrivers(this.origin_latitude,this.origin_longitude);
        }else{
          console.log("destinationwala");
          //document.getElementById("destination_address").innerText = address;
+         this.destination_latitude = location.lat;
+         this.destination_longitude = location.lng;
          this.destination_placeId = place_id;
        }
      }else
@@ -276,7 +296,6 @@ declare var google;
      if(this.origin_placeId!='' && this.destination_placeId!='')
        this.bookRide();
    }
-
 
    getMapCenter(){
      return this.map.getCenter()
@@ -295,7 +314,6 @@ declare var google;
            });
          } else {
            let latLngObj = {'lat': place.geometry.location.lat(), 'long': place.geometry.location.lng()}
-           this.getAddress(latLngObj,purpose);
            sub.next(place.geometry.location);
          }
        });
@@ -370,7 +388,8 @@ declare var google;
          
          this.directionsDisplay.setDirections(response);
        } else {
-         window.alert('Directions request failed due to ' + status);
+         //window.alert('Directions request failed due to ' + status);
+         this.userdata.pop_alert("No Routes Found!","Sorry, we are unable to find any routes",['Ok']);
        }
      });
    }
@@ -387,17 +406,17 @@ declare var google;
 
 
    fetchNearByRides(ride){
-
+     console.log(this.origin_latitude,this.origin_longitude,"eita");
      Promise.resolve("proceed")
      .then((proceed) => {
-       this.userdata.show_loading("Getting Rides");
+       this.userdata.show_loading("Getting Nearby Rides");
        return this.serviceProvider.getRidesInformation();;
      }).then((result) => {
 
        //console.log(JSON.stringify(result));
        let drivers =  JSON.stringify(result);
        var obj = JSON.parse(drivers.toString());
-       var carLocation, carName, i=0, type;
+       var carLocation, carName, carNumber, carRate, carVehicle, i=0, type;
        let latitude : any, longitude: any;
        for (var key in obj) {
          if (obj.hasOwnProperty(key)) {
@@ -406,13 +425,19 @@ declare var google;
            latitude = (JSON.stringify(obj[key].location.latitude));
            longitude = (JSON.stringify(obj[key].location.longitude));
            type = (JSON.stringify(obj[key].type));
-           
-           setTimeout(this.placeRidesOnMap(latitude,longitude,carName), i * 400);
+           carNumber = (JSON.stringify(obj[key].number));
+           carRate = (JSON.stringify(obj[key].rate));
+           carVehicle = (JSON.stringify(obj[key].vehicle));
+
+           setTimeout(this.placeRidesOnMap(latitude,longitude,carName), i++ * 500);
          }
        }
 
        this.userdata.dismiss_loading();
-       //return this.api.getMobileStatus(countryId,this.userdata.number);  
+       this.driverInformation = obj;
+     }).then((proceed) => {
+       //this.userdata.show_loading("Getting Nearby Rides");
+       //return this.serviceProvider.getRidesInformation();;
      }).catch((error) => {
        console.log("Error registering user" + error);
        console.log(JSON.stringify(error));
@@ -449,7 +474,7 @@ declare var google;
      }
    }
 
-   updateDriverLocationService(latitude,longitude,carname){
+   updateDriverLocationService(latitude,longitude,driverNumber){
 
      Promise.resolve("proceed")
      .then((proceed) => {
@@ -461,7 +486,7 @@ declare var google;
          body : body,
          method : "put"
        };
-       return this.serviceProvider.updateDriverLocation(carname,values);;
+       return this.serviceProvider.updateDriverLocation(driverNumber,values);;
      }).then((result) => {
        //act as per results of api
 
@@ -519,20 +544,20 @@ declare var google;
    }
 
    zoomToLocation(latitude,longitude,zoom) {
-       var location = new google.maps.LatLng(latitude, longitude);
-       this.map.setCenter(location);
-       this.map.setZoom(zoom);
+     var location = new google.maps.LatLng(latitude, longitude);
+     this.map.setCenter(location);
+     this.map.setZoom(zoom);
    }
 
    bookARide(chooseRide){
      //post location, name, rating to open_bookings
-     if(this.origin_latitude == '' || this.origin_longitude ==''){
-       this.userdata.pop_alert("No Rides!","Please select your origin address first!",['OK']);
+     if(this.destination_latitude == '' || this.destination_longitude ==''){
+       this.userdata.pop_alert("No Rides!","Please select your origin/destination address!",['OK']);
        return;
      }
 
-    var userNumber, userRating, userRideType, userStatus;
-    Promise.resolve("proceed")
+     var userNumber, userRating, userRideType, userStatus;
+     Promise.resolve("proceed")
      .then((proceed) => {
        //TODO : to be removed once login is done
        return this.userdata.setValue("userNumber","7504429196");
@@ -584,43 +609,235 @@ declare var google;
 
    }
 
-  openChooseRide() {
-    let actionSheet = this.actionSheetCtrl.create({
-      title: 'Choose Your Ride',
-      buttons: [
-        {
-          text: 'Auto',
-          handler: () => {
-            console.log('Auto clicked');
-            this.bookARide('auto');
-          }
-        },{
-          text: 'Car',
-          handler: () => {
-            console.log('Car clicked');
-            this.bookARide('car');
-          }
-        },{
-          text: 'Van',
-          handler: () => {
-            console.log('Van clicked');
-            this.bookARide('van');
-          }
-        },{
-          text: 'SUV',
-          handler: () => {
-            console.log('SUV clicked');
-            this.bookARide('suv');
-          }
-        },{
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
-    });
-    actionSheet.present();
-  }
-}
+   openChooseRide() {
+     //post location, name, rating to open_bookings
+     console.log(this.origin_longitude,this.origin_latitude);
+     if(this.destination_latitude == '' || this.destination_longitude ==''){
+       //this.userdata.pop_alert("No Rides!","Please select your origin/destination address!",['OK']);
+       //return;
+     }
+
+     let actionSheet = this.actionSheetCtrl.create({
+       title: 'Choose Your Ride',
+       buttons: [
+       {
+         text: 'Auto',
+         handler: () => {
+           console.log('Auto clicked');
+           this.bookARide('auto');
+         }
+       },{
+         text: 'Mini Car',
+         handler: () => {
+           console.log('Car clicked');
+           this.bookARide('minicar');
+         }
+       },{
+         text: 'Open Modal',
+         handler: () => {
+           console.log('Van clicked');
+           this.openModal();
+         }
+       },{
+         text: 'SUV',
+         handler: () => {
+           console.log('SUV clicked');
+           this.bookARide('suv');
+         }
+       },{
+         text: 'Cancel',
+         role: 'cancel',
+         handler: () => {
+           console.log('Cancel clicked');
+         }
+       }
+       ]
+     });
+     actionSheet.present();
+     
+   }
+
+   openModal() {
+     const modalOptions : ModalOptions = {
+       enableBackdropDismiss : false
+     }
+     const modalData = {
+       name : 'Saswat'
+     }
+     let modal = this.modalCtrl.create(RideDetailModalPage,{ data: modalData }, modalOptions);
+     modal.present();
+   }
+
+   checkDriversInformation(origin_latitude,origin_longitude){
+
+     let TIME_IN_MS = 3000;
+     let hideFooterTimeout = setTimeout( () => {
+       console.log("waiting for driversInformation");
+       if(this.driverInformation == undefined)
+         this.checkDriversInformation(origin_latitude,origin_longitude);
+       else{
+         console.log("found driversInformation");
+         this.calculateDistanceOfDrivers(origin_latitude,origin_longitude);
+       }
+     }, TIME_IN_MS);
+
+   }
+
+   calculateDistanceOfDrivers(origin_latitude,origin_longitude){
+
+
+     var originOfDrivers  = [];
+     var destinationOfUser = [];
+     Promise.resolve("proceed")
+     .then((proceed) => {
+       console.log("Calculating drivers distances");
+       return this.driverInformation;
+     }).then((result) => {
+
+       var carLocation, carName, carNumber, carRate, carVehicle, i=0, type;
+       let latitude : any, longitude: any;
+
+       var destination = new google.maps.LatLng(origin_latitude,origin_longitude);
+       console.log(this.driverInformation);
+       for (var key in result) {
+         if (result.hasOwnProperty(key)) {
+
+           latitude = (JSON.stringify(result[key].location.latitude));
+           longitude = (JSON.stringify(result[key].location.longitude));
+
+           carNumber = (JSON.stringify(result[key].number));
+           carVehicle = (JSON.stringify(result[key].vehicle));
+
+           var origin = new google.maps.LatLng(latitude,longitude);
+
+           originOfDrivers.push(origin);
+           destinationOfUser.push(destination);
+           console.log("2");
+         }
+       }
+       console.log("1");
+     }).then((proceed) => {
+       console.log("3");
+       console.log(JSON.stringify(originOfDrivers),JSON.stringify(destinationOfUser));
+       return this.googleDistanceMatrix(originOfDrivers,destinationOfUser);
+     }).then((result) => {
+
+     }).catch((error) => {
+       console.log("Error registering user" + error);
+       console.log(JSON.stringify(error));
+       this.userdata.dismiss_loading();
+     });
+     
+   }
+
+
+
+   googleDistanceMatrix(originOfDrivers,destinationOfUser){
+     //   var origin1 = new google.maps.LatLng((20.29175783652327),(85.82564004167955));
+     //   var origin2 = new google.maps.LatLng((20.309201610785635),(85.8206288749398));
+     //  // var orgina = [];
+     //  // orgina.push(origin1);
+     //  // orgina.push(origin2);
+
+     //   var destinationA = new google.maps.LatLng((20.4625053),(85.8828848));
+     //   var destinationB = new google.maps.LatLng((21.4625054),(85.8828848));
+     // console.log(JSON.stringify(originOfDrivers),JSON.stringify(destinationOfUser));
+     var service = new google.maps.DistanceMatrixService();
+     service.getDistanceMatrix(
+     {
+       origins: originOfDrivers,
+       destinations: destinationOfUser,
+       travelMode: 'DRIVING'
+     }, this.callback);
+
+   }
+
+
+
+   callback(response, status) {
+     console.log(JSON.stringify(response));
+     if (status == 'OK') {
+
+       // var distancesOfDrivers = [];
+       // var durationOfDrivers = [];
+
+       var origins = response.originAddresses;
+       var destinations = response.destinationAddresses;
+       for (var i = 0; i < origins.length; i++) {
+         var results = response.rows[i].elements;
+           var element = results[0];
+           if(element.status != 'OK')
+             break;
+           var distance = element.distance.text;
+           var duration = element.duration.text;
+           console.log(distance,duration);
+           this.distancesOfDrivers.push(distance);
+           this.durationOfDrivers.push(duration);
+         
+       }
+       //if(i==origins.length)
+         //console.log(JSON.stringify(distancesOfDrivers),(durationOfDrivers));
+         //this.userdata.access_token = "asdas";
+//         extractIdealRides(distancesOfDrivers,durationOfDrivers);
+     }
+   }
+
+
+   extractIdealRides(distancesOfDrivers,durationOfDrivers){
+
+     var originOfDrivers  = [];
+     var destinationOfUser = [];
+     Promise.resolve("proceed")
+     .then((proceed) => {
+       console.log("Finding ideal drivers");
+       return this.driverInformation;
+     }).then((result) => {
+
+       var carLocation, carName, carNumber, carRate, carVehicle, i=0, type;
+       let latitude : any, longitude: any;
+
+       console.log(this.driverInformation);
+       for (var key in result) {
+         if (result.hasOwnProperty(key)) {
+
+           carNumber = (JSON.stringify(result[key].number));
+           carVehicle = (JSON.stringify(result[key].vehicle));
+           carRate = (JSON.stringify(result[key].rate));
+
+            if(distancesOfDrivers.getValue(i) < 5.0){
+              if((carVehicle == 'auto') && (this.autoIdeal.time > durationOfDrivers.getValue(i) || this.autoIdeal.time == undefined)){
+                  this.autoIdeal.time = durationOfDrivers.getValue(i);
+                  this.autoIdeal.number = carNumber;
+                  this.autoIdeal.distance = distancesOfDrivers.getValue(i);
+                  this.autoIdeal.rate = carRate;
+              }else if((carVehicle == 'auto') && (this.miniCarIdeal.time > durationOfDrivers.getValue(i) || this.miniCarIdeal.time == undefined)){
+                  this.miniCarIdeal.time = durationOfDrivers.getValue(i);
+                  this.miniCarIdeal.number = carNumber;
+                  this.miniCarIdeal.distance = distancesOfDrivers.getValue(i);
+                  this.miniCarIdeal.rate = carRate;
+              }else if((carVehicle == 'auto') && (this.suvIdeal.time > durationOfDrivers.getValue(i) || this.suvIdeal.time == undefined)){
+                  this.suvIdeal.time = durationOfDrivers.getValue(i);
+                  this.suvIdeal.number = carNumber;
+                  this.suvIdeal.distance = distancesOfDrivers.getValue(i);
+                  this.suvIdeal.rate = carRate;
+              }else{
+                console.log("No Vehicles Ideal");
+                this.userdata.pop_alert("No Service Found!", "Sorry, we are unable to find any rides.",['OK']);
+              }
+            }
+            i++;
+         }
+       }
+     }).then((proceed) => {
+       console.log("Auto -> ",this.autoIdeal.time,this.autoIdeal.distance,this.autoIdeal.rate,this.autoIdeal.number);
+       console.log("MiniCar -> ",this.miniCarIdeal.time,this.miniCarIdeal.distance,this.miniCarIdeal.rate,this.miniCarIdeal.number);
+       console.log("SUV -> ",this.suvIdeal.time,this.suvIdeal.distance,this.suvIdeal.rate,this.suvIdeal.number);
+     }).catch((error) => {
+       console.log("Error findIdealRides()" + error);
+       console.log(JSON.stringify(error));
+       this.userdata.dismiss_loading();
+     });
+     
+   }
+
+ }

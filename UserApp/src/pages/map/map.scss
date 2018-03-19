@@ -77,14 +77,14 @@ page-map {
     cursor:pointer;
   }
   .bookButonView{
-    position:relative;
+    position:absolute;
     /*url of the marker*/
 /*    background:url(../assets/icon/marker.png) no-repeat;*/
     /*center the marker*/
-    bottom:13%;
+    top:90%;
+    left: 30%;
+    right: 28%;
     z-index:1;
-    align-content: center;
-    text-align:center;
   }
   .bookButton{
     width: 150px;
