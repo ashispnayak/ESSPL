@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Ride Estimate
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary">Cancel</span>
+        <ion-icon name="md-close" showWhen="android, windows"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-row>
+    <ion-label style="text-align: center;">Price : {{ userdata.rideExpense }}</ion-label>
+    <ion-label style="text-align: center;">Distance : {{ userdata.distance }}</ion-label>
+    <ion-label style="text-align: center;">ETA : {{ userdata.eta }}</ion-label>
+  </ion-row>
+      <button ion-button (click)="dismiss()" color="secondary" style="width: 100%; margin-top: 10%">Confirm Booking
+      </button>
+</ion-content>
