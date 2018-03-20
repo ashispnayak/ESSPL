@@ -123,6 +123,10 @@ export class ServiceProvider {
         return this.callApi("open_bookings/" + userNumber,values);
     }
 
+    checkBookingStatus(userNumber):Promise<any> { 
+        return this.callApi("open_bookings/" + userNumber);
+    }
+
     getMobileStatus(countryId,mobileNumber):Promise<any> { 
         return this.callApi("mobiles/" + mobileNumber + "/countries/" + countryId + "/status");
     }

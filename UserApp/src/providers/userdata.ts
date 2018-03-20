@@ -12,9 +12,9 @@ export class UserData {
   public eta: string = "3mins";//expected time of arrival
   public distance: string = "4km"; //journey distance
 
-  public autoRate: number = 3;
-  public miniCarRate: number = 4;
-  public suvRate: number = 5;
+  public autoRate: number = 20;
+  public miniCarRate: number = 30;
+  public suvRate: number = 50;
 
   public db: string;
   public uid: number;

@@ -25,7 +25,7 @@ import { UserData } from '../../providers/userdata';
      public userdata: UserData) {
 
      this.rideInformation = navParams.get('data');
-     this.userdata.distance = (this.rideInformation.distance/1000).toFixed(2) + " km";
+     this.userdata.distance = (this.rideInformation.distance/1000).toFixed(1) + " km";
      let date = new Date(null);
      date.setSeconds(this.rideInformation.time); // specify value for SECONDS here
      console.log(date.toISOString());

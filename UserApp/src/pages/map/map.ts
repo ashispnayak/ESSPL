@@ -575,8 +575,9 @@ declare var google;
      this.map.setZoom(zoom);
    }
 
-   bookARide(chooseRide){
+   bookARide(vehicleNumber: number){
      //post location, name, rating to open_bookings
+     console.log(vehicleNumber);
      if(this.destination_latitude == '' || this.destination_longitude ==''){
        this.userdata.pop_alert("No Rides!","Please select your origin/destination address!",['OK']);
        return;
@@ -587,8 +588,7 @@ declare var google;
      .then((proceed) => {
        //TODO : to be removed once login is done
        return this.userdata.setValue("userNumber","7504429196");
-     })
-     .then((proceed) => {
+     }).then((proceed) => {
        this.userdata.show_loading("Getting A Ride...");
        return this.userdata.getValue("userRating");
      }).then((result) => {
@@ -596,9 +596,9 @@ declare var google;
        return this.userdata.getValue("userStatus");
      }).then((result) => {
        userStatus = result;
-       return this.userdata.getValue("userRideType");
+       return this.userdata.getValue("userNumber");
      }).then((result) => {
-       userRideType = result;
+       userNumber = result;
 
        let location = {
          "latitude" : this.origin_latitude,
@@ -608,7 +608,8 @@ declare var google;
          location : location,
          userRating : userRating,
          userStatus : userStatus,
-         userRideType : userRideType
+         bookingStatus : "open", //open, cancelled
+         vehicleNumber : (vehicleNumber.toString().replace("\"","")).replace("\"","")
        }
        let values = {
          body : body,
@@ -620,6 +621,7 @@ declare var google;
        console.log(JSON.stringify(result));
        this.zoomToLocation(this.origin_latitude,this.origin_longitude,20);
        this.userdata.dismiss_loading();
+       this.checkDriverStatus(1);
        //setTimeout(this.updateRiderLocationService(),10000);
      }).catch((error) => {
        this.userdata.dismiss_loading();
@@ -628,7 +630,66 @@ declare var google;
      });
 
    }
+   checkDriverStatus(purpose){
 
+     Promise.resolve("proceed")
+     .then((proceed) => {
+       //TODO : to be removed once login is done
+       return this.userdata.setValue("userNumber","7504429196");
+     }).then((proceed) => {
+       if(purpose == 1)
+         this.userdata.pop_alert("Waiting for Ride", "Setting up the driver",['OK']);
+     }).then((proceed) => {
+       return this.userdata.getValue("userNumber");
+     }).then((result) => {
+
+       return this.serviceProvider.checkBookingStatus(result);
+     }).then((result) => {
+       console.log(result);
+       let value = JSON.parse(JSON.stringify(result));
+       console.log(value.bookingStatus);
+       if(value.bookingStatus == "open")
+         setTimeout(this.checkDriverStatus(0),5000);
+       else if(value.bookingStatus == "cancelled"){
+         this.userdata.pop_alert("Cancelled","Booking has been cancelled",['OK']);
+                    this.autoIdeal = {
+             time : 1000, //in mins
+             number : 0,
+             distance : 0, //in meters
+             rate : 0,
+             numberOfVehicles : 0
+           };
+           this.suvIdeal = {
+             time : 1000,
+             number : 0,
+             distance : 0,
+             rate : 0,
+             numberOfVehicles : 0
+
+           };
+           this.miniCarIdeal = {
+             time : 1000,
+             number : 0,
+             distance : 0,
+             rate : 0,
+             numberOfVehicles : 0
+
+           };
+       }
+       else if(value.bookingStatus == "accepted")
+         this.userdata.pop_alert("Coming Soon!", "Your cab is arriving in " + this.userdata.eta,['OK']);
+       else
+         console.log("Error in reponse of checkBooking");
+     }).then((proceed) => {
+       //act as per results of api
+       
+       //setTimeout(this.updateRiderLocationService(),10000);
+     }).catch((error) => {
+       this.userdata.dismiss_loading();
+       console.log("Error checkDriverStatus" + error);
+       console.log(JSON.stringify(error));
+     });
+   }
    rideType(){
      this.userdata.rideType = this.userdata.rideType == "Reserve" ? "Share" : "Reserve";
      this.userdata.setValue("rideType",this.userdata.rideType);
@@ -659,17 +720,17 @@ declare var google;
          text: 'Auto' + autoAvailabilityText,
          handler: () => {
            console.log('Auto clicked');
-           if(autoAvailability)
-           this.openRideEstimateModal(this.autoIdeal.number,this.autoIdeal.time,this.autoIdeal.distance,this.autoIdeal.rate);
-           else
-             this.userdata.pop_alert("No Rides","Sorry, no auto is available!",['OK']);
+           if(autoAvailability){
+             this.openRideEstimateModal(this.autoIdeal.number,this.autoIdeal.time,this.autoIdeal.distance,this.autoIdeal.rate);
+           }else
+           this.userdata.pop_alert("No Rides","Sorry, no auto is available!",['OK']);
          }
        },{
          text: 'Mini Car' + miniCarAvailabilityText,
          handler: () => {
            console.log('Car clicked');
            if(miniCarAvailability)  
-           this.openRideEstimateModal(this.miniCarIdeal.number,this.miniCarIdeal.time,this.miniCarIdeal.distance,this.miniCarIdeal.rate);
+             this.openRideEstimateModal(this.miniCarIdeal.number,this.miniCarIdeal.time,this.miniCarIdeal.distance,this.miniCarIdeal.rate);
            else
              this.userdata.pop_alert("No Rides","Sorry, no minicar is available!",['OK']);
          }
@@ -678,7 +739,7 @@ declare var google;
          handler: () => {
            console.log('SUV clicked');
            if(suvAvailability)
-           this.openRideEstimateModal(this.suvIdeal.number,this.suvIdeal.time,this.suvIdeal.distance,this.suvIdeal.rate);
+             this.openRideEstimateModal(this.suvIdeal.number,this.suvIdeal.time,this.suvIdeal.distance,this.suvIdeal.rate);
            else
              this.userdata.pop_alert("No Rides","Sorry, no SUV is available!",['OK']);
          }
@@ -691,16 +752,13 @@ declare var google;
        }
        ]
      });
-     bottomSheet.onDidDismiss(data => {
-       console.log(data);
-       //if(data == 'confirm')
-         //bookARide()
-     });
+
      bottomSheet.present();
      
    }
 
-   openRideEstimateModal(vehicleNumber, vehicleTime, vehicleDistance, vehicleRate : number) {
+   openRideEstimateModal(vehicleNumber : number, vehicleTime, vehicleDistance, vehicleRate : number) {
+     console.log(vehicleNumber);
      const modalOptions : ModalOptions = {
        enableBackdropDismiss : false
      }
@@ -712,6 +770,11 @@ declare var google;
        rate : vehicleRate
      }
      let modal = this.modalCtrl.create(RideDetailModalPage,{ data: modalData }, modalOptions);
+     modal.onDidDismiss(data => {
+       console.log(data);
+       if(data == 'confirmed')
+         this.bookARide(vehicleNumber);
+     });
      modal.present();
    }
 
