@@ -13,19 +13,19 @@ export class Connectivity {
     this.onDevice = this.platform.is('cordova');
   }
  
-  isOnline(): boolean {
-    if(this.onDevice && Network.type){
-      return Network.type !== Connection.NONE;
-    } else {
-      return navigator.onLine; 
-    }
-  }
+  // isOnline(): boolean {
+  //   if(this.onDevice && Network.type){
+  //     return Network.type !== Connection.NONE;
+  //   } else {
+  //     return navigator.onLine; 
+  //   }
+  // }
  
-  isOffline(): boolean {
-    if(this.onDevice && Network.type){
-      return Network.type === Connection.NONE;
-    } else {
-      return !navigator.onLine;   
-    }
-  }
+  // isOffline(): boolean {
+  //   if(this.onDevice && Network.type){
+  //     return Network.type === Connection.NONE;
+  //   } else {
+  //     return !navigator.onLine;   
+  //   }
+  // }
 }
