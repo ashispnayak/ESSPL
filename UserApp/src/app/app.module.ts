@@ -33,6 +33,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { SupportPage } from '../pages/support/support';
 import { AutocompletePage } from '../pages/autocomplete/autocomplete';
+import { RideDetailModalPage } from '../pages/ride-detail-modal/ride-detail-modal';
 
 import { OffersData } from '../providers/offers-data';
 import { UserData } from '../providers/userdata';
@@ -75,7 +76,8 @@ firebase.initializeApp(firebaseConfig)
     TabsPage,
     TutorialPage,
     SupportPage,
-    AutocompletePage
+    AutocompletePage,
+    RideDetailModalPage
   ],
   imports: [BrowserModule ,HttpModule,
     IonicModule.forRoot(ESSPL),
@@ -98,7 +100,8 @@ firebase.initializeApp(firebaseConfig)
     TabsPage,
     TutorialPage,
     SupportPage,
-    AutocompletePage
+    AutocompletePage,
+    RideDetailModalPage
   ],
   providers: [
     StatusBar,

@@ -8,7 +8,9 @@ export class UserData {
 
   public userType: string; //rider or driver
   public rideType: string = "Reserve"; // share or reserve
-
+  public rideExpense: string = "50";
+  public eta: string = "3mins";//expected time of arrival
+  public distance: string = "4km"; //journey distance
 
   public db: string;
   public uid: number;

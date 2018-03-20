@@ -72,34 +72,34 @@ export class Toolbox {
     }
 }
 
-static listenNetwork(userdata: any, app_component: any) {
-	let network = new Network();
-	network.onDisconnect().subscribe(() => {
-		console.log('network was disconnected');
-		userdata.networkStatus = false;
-		if (userdata.appInitialised && userdata.waitingForInternetPopup == undefined) {
-			// Only show the "No internet" popup once if internet loss has already been detected.
-			userdata.waitingForInternetPopup = userdata.pop_alert("Sorry", "An internet connection is required to use this app. " +
-				"Once internet is available, this app will resume automatically.",
-				[], false);
-		}
-		console.log("printing no internet popup");
-		console.log(userdata.waitingForInternetPopup);
-	});
+// static listenNetwork(userdata: any, app_component: any) {
+// 	let network = new Network();
+// 	network.onDisconnect().subscribe(() => {
+// 		console.log('network was disconnected');
+// 		userdata.networkStatus = false;
+// 		if (userdata.appInitialised && userdata.waitingForInternetPopup == undefined) {
+// 			// Only show the "No internet" popup once if internet loss has already been detected.
+// 			userdata.waitingForInternetPopup = userdata.pop_alert("Sorry", "An internet connection is required to use this app. " +
+// 				"Once internet is available, this app will resume automatically.",
+// 				[], false);
+// 		}
+// 		console.log("printing no internet popup");
+// 		console.log(userdata.waitingForInternetPopup);
+// 	});
 
-	network.onConnect().subscribe(() => {
-		console.log('network connected');
-		userdata.networkStatus = true;
-		if (userdata.waitingForInternet) {
-			userdata.waitingForInternet = false;
-			app_component.initializeApp();
-		}
-		else if (userdata.waitingForInternetPopup) {
-			userdata.waitingForInternetPopup.dismiss();
-			userdata.waitingForInternetPopup = undefined;
-		}
-	});
-}
+// 	network.onConnect().subscribe(() => {
+// 		console.log('network connected');
+// 		userdata.networkStatus = true;
+// 		if (userdata.waitingForInternet) {
+// 			userdata.waitingForInternet = false;
+// 			app_component.initializeApp();
+// 		}
+// 		else if (userdata.waitingForInternetPopup) {
+// 			userdata.waitingForInternetPopup.dismiss();
+// 			userdata.waitingForInternetPopup = undefined;
+// 		}
+// 	});
+// }
 
 static listenFirebaseNotification(platform: any, firebase: any, userdata: any, xml_rpc: any, navCtrl: any,
 	message_page: any, topnavheader: any) {

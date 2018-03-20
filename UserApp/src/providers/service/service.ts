@@ -115,8 +115,8 @@ export class ServiceProvider {
         return this.callApi("riders/" + number + "/location",values);
     }
 
-    updateDriverLocation(name,values):Promise<any> { 
-        return this.callApi("drivers/" + name + "/location",values);
+    updateDriverLocation(driverNumber,values):Promise<any> { 
+        return this.callApi("drivers/" + driverNumber + "/location",values);
     }
 
     openABooking(userNumber,values):Promise<any> { 
