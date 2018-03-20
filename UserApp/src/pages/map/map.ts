@@ -63,9 +63,24 @@ declare var google;
    public distancesOfDrivers = [];
    public durationOfDrivers = [];
 
-   public autoIdeal : any;
-   public suvIdeal : any;
-   public miniCarIdeal : any;
+   public autoIdeal = {
+     time : 1000, //in mins
+     number : 0,
+     distance : 0, //in meters
+     rate : 0
+   };
+   public suvIdeal = {
+     time : 1000,
+     number : 0,
+     distance : 0,
+     rate : 0
+   };
+   public miniCarIdeal = {
+     time : 1000,
+     number : 0,
+     distance : 0,
+     rate : 0
+   };
 
    constructor(public navCtrl: NavController,
      public geolocation: Geolocation,
@@ -712,18 +727,15 @@ declare var google;
 
            originOfDrivers.push(origin);
            destinationOfUser.push(destination);
-           console.log("2");
          }
        }
-       console.log("1");
      }).then((proceed) => {
-       console.log("3");
        console.log(JSON.stringify(originOfDrivers),JSON.stringify(destinationOfUser));
        return this.googleDistanceMatrix(originOfDrivers,destinationOfUser);
      }).then((result) => {
-
+       console.log(result);
      }).catch((error) => {
-       console.log("Error registering user" + error);
+       console.log("Error calculateDistanceOfDrivers() " + error);
        console.log(JSON.stringify(error));
        this.userdata.dismiss_loading();
      });
@@ -742,65 +754,58 @@ declare var google;
      //   var destinationA = new google.maps.LatLng((20.4625053),(85.8828848));
      //   var destinationB = new google.maps.LatLng((21.4625054),(85.8828848));
      // console.log(JSON.stringify(originOfDrivers),JSON.stringify(destinationOfUser));
-     Promise.resolve("proceed")
-     .then((proceed) => {
-       var service = new google.maps.DistanceMatrixService();
-       var abcd = service.getDistanceMatrix(
+
+     var distancesOfDrivers = [];
+     var durationOfDrivers = [];
+     var callback = function (response,status) {
+       // console.log(JSON.stringify(response));
+       if (status == 'OK') {
+
+
+         let origins = response.originAddresses;
+         let destinations = response.destinationAddresses;
+         for (var i = 0; i < origins.length; i++) {
+           var results = response.rows[i].elements;
+           var element = results[0];
+           if(element.status != 'OK')
+             break;
+           let distance = element.distance.value;
+           let duration = element.duration.value;
+
+           distancesOfDrivers.push(distance);
+           durationOfDrivers.push(duration);
+
+         }
+       }
+     }
+     // create a function and pass in the callback method.
+     function add(callback: (response,status) => void) {
+       let service = new google.maps.DistanceMatrixService();
+       service.getDistanceMatrix(
        {
          origins: originOfDrivers,
          destinations: destinationOfUser,
          travelMode: 'DRIVING'
-       }, this.callback);
-       console.log(abcd);
-       return abcd;
-     }).then((result) => {
-       console.log(JSON.stringify(result));
-     }).catch((error) => {
-       console.log("Error googleDistanceMatrix()" + error);
-       console.log(JSON.stringify(error));
-       this.userdata.dismiss_loading();
-     });
-
-
-
-   }
-
-
-
-   callback(response, status) {
-     console.log(JSON.stringify(response));
-     if (status == 'OK') {
-
-       var distancesOfDrivers = [];
-       var durationOfDrivers = [];
-
-       var origins = response.originAddresses;
-       var destinations = response.destinationAddresses;
-       for (var i = 0; i < origins.length; i++) {
-         var results = response.rows[i].elements;
-         var element = results[0];
-         if(element.status != 'OK')
-           break;
-         var distance = element.distance.text;
-         var duration = element.duration.text;
-         console.log(distance,duration);
-         distancesOfDrivers.push(distance);
-         durationOfDrivers.push(duration);
-         
-       }
-       if(i==origins.length)
-         return distancesOfDrivers;
-       
-       //console.log(JSON.stringify(distancesOfDrivers),(durationOfDrivers));
-       //this.userdata.access_token = "asdas";
-       //         extractIdealRides(distancesOfDrivers,durationOfDrivers);
+       }, callback, function(returnValue) {
+         // use the return value here instead of like a regular (non-evented) return value
+         console.log(returnValue);
+         console.log("hauciiii0");
+       });
      }
+
+     add(callback);
+
+      setTimeout( () => {
+         console.log("Waiting for checkDistanceDuration");
+         this.extractIdealRides(distancesOfDrivers,durationOfDrivers);
+       }, 3000);
 
    }
 
 
    extractIdealRides(distancesOfDrivers,durationOfDrivers){
 
+     console.log(distancesOfDrivers,durationOfDrivers);
      var originOfDrivers  = [];
      var destinationOfUser = [];
      Promise.resolve("proceed")
@@ -809,10 +814,14 @@ declare var google;
        return this.driverInformation;
      }).then((result) => {
 
-       var carLocation, carName, carNumber, carRate, carVehicle, i=0, type;
+       let carLocation, carName, carNumber, carRate, carVehicle, i=0, type;
        let latitude : any, longitude: any;
+       this.autoIdeal.time = 1000;
+       this.miniCarIdeal.time = 1000;
+       this.suvIdeal.time = 1000;
 
        console.log(this.driverInformation);
+
        for (var key in result) {
          if (result.hasOwnProperty(key)) {
 
@@ -820,27 +829,30 @@ declare var google;
            carVehicle = (JSON.stringify(result[key].vehicle));
            carRate = (JSON.stringify(result[key].rate));
 
-           if(distancesOfDrivers.getValue(i) < 5.0){
-             if((carVehicle == 'auto') && (this.autoIdeal.time > durationOfDrivers.getValue(i) || this.autoIdeal.time == undefined)){
-               this.autoIdeal.time = durationOfDrivers.getValue(i);
+           if(distancesOfDrivers[i] < 5000 && durationOfDrivers[i] < 1000){
+             console.log(carVehicle,distancesOfDrivers[i],durationOfDrivers[i]);
+             if((carVehicle == '0') && (this.autoIdeal.time  > durationOfDrivers[i])){
+               this.autoIdeal.time = durationOfDrivers[i];
                this.autoIdeal.number = carNumber;
-               this.autoIdeal.distance = distancesOfDrivers.getValue(i);
+               this.autoIdeal.distance = distancesOfDrivers[i];
                this.autoIdeal.rate = carRate;
-             }else if((carVehicle == 'auto') && (this.miniCarIdeal.time > durationOfDrivers.getValue(i) || this.miniCarIdeal.time == undefined)){
-               this.miniCarIdeal.time = durationOfDrivers.getValue(i);
+             }else if((carVehicle == '1') && (this.miniCarIdeal.time > durationOfDrivers[i])){
+               this.miniCarIdeal.time = durationOfDrivers[i];
                this.miniCarIdeal.number = carNumber;
-               this.miniCarIdeal.distance = distancesOfDrivers.getValue(i);
+               this.miniCarIdeal.distance = distancesOfDrivers[i];
                this.miniCarIdeal.rate = carRate;
-             }else if((carVehicle == 'auto') && (this.suvIdeal.time > durationOfDrivers.getValue(i) || this.suvIdeal.time == undefined)){
-               this.suvIdeal.time = durationOfDrivers.getValue(i);
+             }else if((carVehicle == '2') && (this.suvIdeal.time > durationOfDrivers[i])){
+               this.suvIdeal.time = durationOfDrivers[i];
                this.suvIdeal.number = carNumber;
-               this.suvIdeal.distance = distancesOfDrivers.getValue(i);
+               this.suvIdeal.distance = distancesOfDrivers[i];
                this.suvIdeal.rate = carRate;
              }else{
-               console.log("No Vehicles Ideal");
-               this.userdata.pop_alert("No Service Found!", "Sorry, we are unable to find any rides.",['OK']);
+               console.log("No Ideal Vehicles ");
+               //this.userdata.pop_alert("No Service Found!", "Sorry, we are unable to find any rides.",['OK']);
              }
            }
+           else
+             console.log("Too Far Away", distancesOfDrivers[i]);
            i++;
          }
        }
