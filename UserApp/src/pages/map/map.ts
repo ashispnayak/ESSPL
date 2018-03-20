@@ -67,20 +67,28 @@ declare var google;
      time : 1000, //in mins
      number : 0,
      distance : 0, //in meters
-     rate : 0
+     rate : 0,
+     numberOfVehicles : 0
    };
    public suvIdeal = {
      time : 1000,
      number : 0,
      distance : 0,
-     rate : 0
+     rate : 0,
+     numberOfVehicles : 0
+
    };
    public miniCarIdeal = {
      time : 1000,
      number : 0,
      distance : 0,
-     rate : 0
+     rate : 0,
+     numberOfVehicles : 0
+
    };
+
+   public routeDistance : string;
+   public routeTime : any;
 
    constructor(public navCtrl: NavController,
      public geolocation: Geolocation,
@@ -309,7 +317,7 @@ declare var google;
      console.log("plaeId is null");
 
      if(this.origin_placeId!='' && this.destination_placeId!='')
-       this.bookRide();
+       this.ridePath();
    }
 
    getMapCenter(){
@@ -374,7 +382,7 @@ declare var google;
    }
 
    public  travelMode : any;
-   bookRide() {
+   ridePath() {
      console.log("7");
      this.travelMode = 'DRIVING';
      console.log(this.origin_placeId);
@@ -400,7 +408,10 @@ declare var google;
        if (status2 === 'OK') {
          //hide the center marker
          //        this.centerMarker.visibility = 'hide';
-         
+         console.log(JSON.stringify(response));
+         this.routeDistance = response.routes[0].legs[0].distance.value;
+         this.routeTime = response.routes[0].legs[0].duration.value;
+         console.log(this.routeDistance,this.routeTime );
          this.directionsDisplay.setDirections(response);
        } else {
          //window.alert('Directions request failed due to ' + status);
@@ -628,36 +639,48 @@ declare var google;
      //post location, name, rating to open_bookings
      console.log(this.origin_longitude,this.origin_latitude);
      if(this.destination_latitude == '' || this.destination_longitude ==''){
-       //this.userdata.pop_alert("No Rides!","Please select your origin/destination address!",['OK']);
-       //return;
+       this.userdata.pop_alert("No Rides!","Please select your origin/destination address!",['OK']);
+       return;
      }
 
-     let actionSheet = this.actionSheetCtrl.create({
+     let autoAvailability = this.autoIdeal.numberOfVehicles != 0;
+     let autoAvailabilityText = autoAvailability ? "" : "(Not Available)";
+
+     let miniCarAvailability = this.miniCarIdeal.numberOfVehicles != 0;
+     let miniCarAvailabilityText = miniCarAvailability ? "" : "(Not Available)";
+
+     let suvAvailability = this.suvIdeal.numberOfVehicles != 0;
+     let suvAvailabilityText = suvAvailability ? "" : "(Not Available)";     
+
+     let bottomSheet = this.actionSheetCtrl.create({
        title: 'Choose Your Ride',
        buttons: [
        {
-         text: 'Auto',
+         text: 'Auto' + autoAvailabilityText,
          handler: () => {
            console.log('Auto clicked');
-           this.bookARide('auto');
+           if(autoAvailability)
+           this.openRideEstimateModal(this.autoIdeal.number,this.autoIdeal.time,this.autoIdeal.distance,this.autoIdeal.rate);
+           else
+             this.userdata.pop_alert("No Rides","Sorry, no auto is available!",['OK']);
          }
        },{
-         text: 'Mini Car',
+         text: 'Mini Car' + miniCarAvailabilityText,
          handler: () => {
            console.log('Car clicked');
-           this.bookARide('minicar');
+           if(miniCarAvailability)  
+           this.openRideEstimateModal(this.miniCarIdeal.number,this.miniCarIdeal.time,this.miniCarIdeal.distance,this.miniCarIdeal.rate);
+           else
+             this.userdata.pop_alert("No Rides","Sorry, no minicar is available!",['OK']);
          }
        },{
-         text: 'Open Modal',
-         handler: () => {
-           console.log('Van clicked');
-           this.openModal();
-         }
-       },{
-         text: 'SUV',
+         text: 'SUV' + suvAvailabilityText,
          handler: () => {
            console.log('SUV clicked');
-           this.bookARide('suv');
+           if(suvAvailability)
+           this.openRideEstimateModal(this.suvIdeal.number,this.suvIdeal.time,this.suvIdeal.distance,this.suvIdeal.rate);
+           else
+             this.userdata.pop_alert("No Rides","Sorry, no SUV is available!",['OK']);
          }
        },{
          text: 'Cancel',
@@ -668,16 +691,25 @@ declare var google;
        }
        ]
      });
-     actionSheet.present();
+     bottomSheet.onDidDismiss(data => {
+       console.log(data);
+       //if(data == 'confirm')
+         //bookARide()
+     });
+     bottomSheet.present();
      
    }
 
-   openModal() {
+   openRideEstimateModal(vehicleNumber, vehicleTime, vehicleDistance, vehicleRate : number) {
      const modalOptions : ModalOptions = {
        enableBackdropDismiss : false
      }
+
      const modalData = {
-       name : 'Saswat'
+       number : vehicleNumber,
+       time : vehicleTime,
+       distance : this.routeDistance,
+       rate : vehicleRate
      }
      let modal = this.modalCtrl.create(RideDetailModalPage,{ data: modalData }, modalOptions);
      modal.present();
@@ -730,7 +762,7 @@ declare var google;
          }
        }
      }).then((proceed) => {
-       console.log(JSON.stringify(originOfDrivers),JSON.stringify(destinationOfUser));
+       //console.log(JSON.stringify(originOfDrivers),JSON.stringify(destinationOfUser));
        return this.googleDistanceMatrix(originOfDrivers,destinationOfUser);
      }).then((result) => {
        console.log(result);
@@ -795,10 +827,10 @@ declare var google;
 
      add(callback);
 
-      setTimeout( () => {
-         console.log("Waiting for checkDistanceDuration");
-         this.extractIdealRides(distancesOfDrivers,durationOfDrivers);
-       }, 3000);
+     setTimeout( () => {
+       console.log("Waiting for checkDistanceDuration");
+       this.extractIdealRides(distancesOfDrivers,durationOfDrivers);
+     }, 2000);
 
    }
 
@@ -836,18 +868,21 @@ declare var google;
                this.autoIdeal.number = carNumber;
                this.autoIdeal.distance = distancesOfDrivers[i];
                this.autoIdeal.rate = carRate;
+               this.autoIdeal.numberOfVehicles++;
              }else if((carVehicle == '1') && (this.miniCarIdeal.time > durationOfDrivers[i])){
                this.miniCarIdeal.time = durationOfDrivers[i];
                this.miniCarIdeal.number = carNumber;
                this.miniCarIdeal.distance = distancesOfDrivers[i];
                this.miniCarIdeal.rate = carRate;
+               this.miniCarIdeal.numberOfVehicles++;
              }else if((carVehicle == '2') && (this.suvIdeal.time > durationOfDrivers[i])){
                this.suvIdeal.time = durationOfDrivers[i];
                this.suvIdeal.number = carNumber;
                this.suvIdeal.distance = distancesOfDrivers[i];
                this.suvIdeal.rate = carRate;
+               this.suvIdeal.numberOfVehicles++;
              }else{
-               console.log("No Ideal Vehicles ");
+               console.log("Not Ideal Vehicle ");
                //this.userdata.pop_alert("No Service Found!", "Sorry, we are unable to find any rides.",['OK']);
              }
            }
@@ -857,9 +892,13 @@ declare var google;
          }
        }
      }).then((proceed) => {
-       console.log("Auto -> ",this.autoIdeal.time,this.autoIdeal.distance,this.autoIdeal.rate,this.autoIdeal.number);
-       console.log("MiniCar -> ",this.miniCarIdeal.time,this.miniCarIdeal.distance,this.miniCarIdeal.rate,this.miniCarIdeal.number);
-       console.log("SUV -> ",this.suvIdeal.time,this.suvIdeal.distance,this.suvIdeal.rate,this.suvIdeal.number);
+       if(this.autoIdeal.numberOfVehicles == 0 && this.miniCarIdeal.numberOfVehicles == 0 && this.suvIdeal.numberOfVehicles == 0){
+         this.userdata.pop_alert("No Rides Found!", "Sorry, we were unable to find any rides nearby",['OK']);
+       }else{
+         console.log("Auto -> ",this.autoIdeal.time,this.autoIdeal.distance,this.autoIdeal.rate,this.autoIdeal.number);
+         console.log("MiniCar -> ",this.miniCarIdeal.time,this.miniCarIdeal.distance,this.miniCarIdeal.rate,this.miniCarIdeal.number);
+         console.log("SUV -> ",this.suvIdeal.time,this.suvIdeal.distance,this.suvIdeal.rate,this.suvIdeal.number);
+       }
      }).catch((error) => {
        console.log("Error findIdealRides()" + error);
        console.log(JSON.stringify(error));

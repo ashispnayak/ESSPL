@@ -4,7 +4,7 @@
       Ride Estimate
     </ion-title>
     <ion-buttons start>
-      <button ion-button (click)="dismiss()">
+      <button ion-button (click)="dismissModal(0)">
         <span ion-text color="primary">Cancel</span>
         <ion-icon name="md-close" showWhen="android, windows"></ion-icon>
       </button>
@@ -17,6 +17,6 @@
     <ion-label style="text-align: center;">Distance : {{ userdata.distance }}</ion-label>
     <ion-label style="text-align: center;">ETA : {{ userdata.eta }}</ion-label>
   </ion-row>
-      <button ion-button (click)="dismiss()" color="secondary" style="width: 100%; margin-top: 10%">Confirm Booking
+      <button ion-button (click)="dismissModal(1)" color="secondary" style="width: 100%; margin-top: 10%">Confirm Booking
       </button>
 </ion-content>
