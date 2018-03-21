@@ -1,25 +1,62 @@
-<ion-header no-shadow>
-    <ion-navbar>
-        <ion-buttons end *ngIf="showSkip">
-            <button ion-button (click)="startApp()" color="primary">Skip</button>
-        </ion-buttons>
-    </ion-navbar>
-</ion-header>
 
-<ion-content no-bounce class="bg-img">
+
+<ion-content no-bounce >
     <ion-slides (ionWillChange)="onSlideChangeStart($event)" pager>
-        <ion-slide *ngFor="let slide of slides">
-            <img [src]="slide.image" class="slide-image" alt="slide.title" />
-            <h2 class="slide-title" [innerHTML]="slide.title"></h2>
-            <p [innerHTML]="slide.description"></p>
-        </ion-slide>
-        <ion-slide>
-            <img src="assets/img/ica-slidebox-img-4.png" class="slide-image" alt="slide" />
-            <h2 class="slide-title">Ready for hangout?</h2>
-            <button ion-button icon-right large clear (click)="startApp()">
-        Continue
-        <ion-icon name="jet"></ion-icon>
-      </button>
-        </ion-slide>
+
+        <ion-slide style="background-image: url('assets/img/city.png');
+     background-repeat: no-repeat;
+     background-position: center;
+     ">
+            <ion-buttons end *ngIf="showSkip">
+            <button ion-button (click)="startApp()" color="primary" style="margin-top: 100px;">Skip</button>
+        </ion-buttons>
+    <div class="Header animated bounceInRight" style="animation-delay: 0.2s; -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; -o-animation-delay: 0.2s;">
+    <h2>Easily Book Rides</h2>
+     <p>Based On Your Destination</p>
+     </div>
+     <div class="Image" >
+      <img class="Img1 animated lightSpeedIn"  src="assets/img/vehicle.png"  >
+      <img class="animated fadeInUp"id="Img2" src="assets/img/phone.png">
+    </div>
+    
+  </ion-slide>
+
+  <ion-slide style="background-image: url('assets/img/city.png');
+     background-repeat: no-repeat;
+     background-position: center;
+     " >
+    <ion-buttons end *ngIf="showSkip">
+            <button ion-button (click)="startApp()" color="primary" style="margin-top: 120px;">Skip</button>
+        </ion-buttons>
+     <div class="Header animated bounceInRight" style="animation-delay: 5s; -webkit-animation-delay: 5s; -moz-animation-delay: 5s; -o-animation-delay: 5s;" >
+      <h2>No More Waiting</h2>
+      <p>Get Notified For Incoming Vehicle</p>
+     </div>
+       <div class="Image" >
+      <img class="Img3 animated slideInRight" src="assets/img/waiting.png" >
+      <img class="animated fadeInUp"id="Img5" src="assets/img/noti.png">
+    </div>
+   
+  </ion-slide>
+
+  <ion-slide style="background-image: url('assets/img/city.png');
+     background-repeat: no-repeat;
+     background-position: center;
+     ">
+    <ion-buttons end *ngIf="showSkip">
+            <button ion-button (click)="startApp()" color="primary" style="margin-top: 70px;">Skip</button>
+        </ion-buttons>
+    <div class="Header animated bounceInRight" style="animation-delay: 7s; -webkit-animation-delay: 7s; -moz-animation-delay: 7s; -o-animation-delay: 7s;">
+      <h2>Tap On SOS</h2>
+      <p>In case of any emergency</p>
+     </div>
+     <div class="Image" >
+     <img class="Img4 animated lightSpeedIn"  src="assets/img/car.png" >
+      <img class="animated fadeInUp" id="Img6"  src="assets/img/sos.png">
+    </div>
+   
+  </ion-slide>
+
+       
     </ion-slides>
 </ion-content>

@@ -5,9 +5,6 @@ import { GooglePlus } from '@ionic-native/google-plus';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import{ AngularFireModule } from 'angularfire2';
-import { Storage } from '@ionic/storage';
-import { UserData } from '../../providers/userdata';
-
 import firebase from 'firebase';
 @Component({
   selector: 'page-login',
@@ -17,16 +14,8 @@ export class LoginPage {
   displayName: any;
   email: any;
   imageUrl: any;
-  hide:boolean;
-  driverUser:boolean;
-  rideUser:boolean;
 
-  constructor(public navCtrl: NavController, public storage: Storage,
-    public googleplus:GooglePlus, private loadingController:LoadingController,
-    public http:Http, public userdata:UserData ) {
-    this.driverUser=false;
-    this.rideUser=false;
-  }
+  constructor(public navCtrl: NavController,public googleplus:GooglePlus, private loadingController:LoadingController, public http:Http  ) {}
 
 
       
@@ -58,22 +47,13 @@ export class LoginPage {
       loader.dismiss();
       this.navCtrl.push(TabsPage);
      
-     
   })
    }).catch(ns=>{alert("Google Authentication Unsuccessful...")
   })
   });
   
   }
-  userType(type){
-    this.hide=true;
-    this.userdata.userType = type;
-    this.storage.set("userType",type);
-  }
 
 
 
 }
-
-
-

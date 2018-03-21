@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
 import { SettingsProvider as settings} from '../settings/settings';
-import { Connectivity } from '../../services/connectivity';
-import { UserData } from '../../providers/userdata';
+import { UserData } from '../providers/userdata';
 
 /*
   Generated class for the ServiceProvider provider.
@@ -21,8 +20,7 @@ export class ServiceProvider {
     *
     * @Returns: InstabloodApiProvider instance
     */
-    constructor(private http: Http, public connectivity: Connectivity,
-        public userdata: UserData) {}
+    constructor(private http: Http, public userData: UserData) {}
 
     /**
     * Method to check weeather a given string is 
@@ -53,7 +51,7 @@ export class ServiceProvider {
     */
     public callApi(url:string, options:any={}):Promise<any> {
         return new Promise((resolve, reject) => {
-        	let baseURL:string = "https://esspl-testing.firebaseio.com";
+        	let baseURL:string = "https://esspl-c3a5b.firebaseio.com/";
             console.log(JSON.stringify(options));
             let fullUrl:string = baseURL
                                + "/" 
@@ -123,16 +121,8 @@ export class ServiceProvider {
         return this.callApi("open_bookings/" + userNumber,values);
     }
 
-    getActiveUsers():Promise<any> { 
-        return this.callApi("active_users");
-    }
-
     checkBookingStatus(userNumber):Promise<any> { 
         return this.callApi("open_bookings/" + userNumber);
-    }
-
-    changeBookingStatus(userNumber,values):Promise<any> { 
-        return this.callApi("open_bookings/" + userNumber + "/bookingStatus",values);
     }
 
     getMobileStatus(countryId,mobileNumber):Promise<any> { 

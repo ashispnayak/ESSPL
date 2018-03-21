@@ -91,7 +91,18 @@ export class UserData {
       });
     });
   }
+  setDisplayName(resName){
+  this.storage.set('Name', resName);
+  this.setValue("username",resName);
+  }
 
+  setDisplayEmail(resEmail){
+    this.storage.set('Email', resEmail);
+  }
+  setDisplayImage(resImage){
+    this.storage.set('ImageUrl', resImage);
+  }
+  
   setValue(key,data): Promise<any> {
     return new Promise((resolve, reject) => {
       this.localdb.set(key,data).then((value) => {
@@ -264,10 +275,13 @@ export class UserData {
     });
   };
 
+ 
   // return a promise
   hasLoggedIn() {
-    return this.storage.get(this.HAS_LOGGED_IN).then((value) => {
-      return value === true;
+    return this.storage.get('hasLoggedIn').then((value) => {
+      console.log('hello');
+      console.log(value);
+      return value;
     });
   };
 

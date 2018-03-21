@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { Events, MenuController, Nav, Platform } from 'ionic-angular';
+import { Events, MenuController, App, Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 // import { Storage } from '@ionic/storage';
-
+import {OneSignal} from '@ionic-native/onesignal';
 import { AccountPage } from '../pages/account/account';
 import { LoginPage } from '../pages/login/login';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -13,10 +13,11 @@ import { TutorialPage } from '../pages/tutorial/tutorial';
 
 import { PlacesListPage } from '../pages/places-list/places-list';
 import { AboutPage } from '../pages/about/about';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+
 import { SubscribePage } from '../pages/subscribe/subscribe';
 import { ContactPage } from '../pages/contact/contact';
-import { MapPage } from '../pages/map/map';
-
+import { VictimlocationPage } from '../pages/victimlocation/victimlocation';
 import { UserData } from '../providers/userdata';
 
 export interface PageInterface {
@@ -41,22 +42,24 @@ export class ESSPL {
   // the left menu only works after login
   // the login page disables the left menu
   appPages: PageInterface[] = [
-  { title: 'ESSPL', component: TabsPage, icon: 'calendar' },
-  { title: 'Places', component: PlacesListPage,  icon: 'md-globe' },
-  { title: 'About', component: AboutPage, icon: 'information-circle' },
-  { title: 'Subscribe', component: SubscribePage, icon: 'logo-rss' },    
-  { title: 'Cotact', component: ContactPage, icon: 'md-mail' },
-
+    { title: 'ESSPL', component: TabsPage, icon: 'calendar' },
+    { title: 'Places', component: PlacesListPage,  icon: 'md-globe' },
+    { title: 'About', component: AboutPage, icon: 'information-circle' },
+    { title: 'Subscribe', component: SubscribePage, icon: 'logo-rss' },    
+    { title: 'Contact', component: ContactPage, icon: 'md-mail' },
+    
   ];
   loggedInPages: PageInterface[] = [
-  { title: 'Account', component: AccountPage, icon: 'person' },
-  { title: 'Logout', component: TabsPage, icon: 'log-out', logsOut: true }
+    { title: 'Account', component: AccountPage, icon: 'person' },
+    { title: 'Logout', component: TabsPage, icon: 'log-out', logsOut: true }
   ];
   loggedOutPages: PageInterface[] = [
-  { title: 'Login', component: LoginPage, icon: 'log-in' },
+    { title: 'Login', component: LoginPage, icon: 'log-in' },
   
   ];
   rootPage: any;
+  notif:any;
+ 
 
   constructor(
     public events: Events,
@@ -64,33 +67,90 @@ export class ESSPL {
     public menu: MenuController,
     public platform: Platform,
     //public storage: Storage,
+    public app: App,
+    public androidPermissions: AndroidPermissions,
+    public onesignal: OneSignal,
     public statusBar: StatusBar, 
     public splashScreen: SplashScreen
-    ) {
+  ) {
+    
     // Call any initial plugins when ready
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
-    });
-
-    this.userData.setValue("userNumber","7504429196");
+       
+        var notificationOpenedCallback = function(jsonData) {
+      console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+    };
+     this.userData.setValue("userNumber","7504429196");
     this.userData.setValue("userRating","4.1");
     this.userData.setValue("userStatus","Searching"); //Searching or Riding or Unavailable
-    this.userData.setValue("userRideType","SHARE"); //RESERVE or SHARE
+    this.userData.setValue("userRideType","SHARE");
+
+    window["plugins"].OneSignal
+      .startInit("d19097c8-aa4f-4eeb-86d7-f79a56a32630", "691458927450")
+     
+      });
+    this.onesignal.inFocusDisplaying(onesignal.OSInFocusDisplayOption.InAppAlert);
+
+
+      // Retrieve the OneSignal user id and the device token
+      this.onesignal.getIds()
+      .then((ids) =>
+      {
+         console.log('getIds: ' + JSON.stringify(ids));
+      });
+
+
+      // When a push notification is received handle
+      // how the application will respond
+      this.onesignal.handleNotificationReceived()
+      .subscribe((msg) =>
+      {
+        this.notif = true;
+         // Log data received from the push notification service
+         console.log('Notification received');
+         console.dir(msg);
+      });
+
+
+      // When a push notification is opened by the user
+      // handle how the application will respond
+      this.onesignal.handleNotificationOpened()
+      .subscribe((msg) =>
+      {
+        if(this.notif === true){
+         // Log data received from the push notification service
+          let payload = msg;
+        console.log("hiiii");
+      console.log(payload);
+      this.redirectToPage(payload);
+    }
+      });
+
+
+
+      // End plugin initialisation
+      this.onesignal.endInit();
+
+
     // Check if the user has already seen the tutorial
     this.userData.checkHasSeenTutorial().then((hasSeenTutorial) => {
       if (hasSeenTutorial === null) {
         console.log(hasSeenTutorial);
         // User has not seen tutorial
-        this.rootPage = MapPage;
+        this.rootPage = TutorialPage;
+       
+
       }
       else{
-        // User has seen tutorial
-
-        this.checkMore();
+                // User has seen tutorial
+                
+                this.rootPage = TutorialPage;
+       // this.checkMore();
       }
-
-
+    
+     
       
     });
 
@@ -102,20 +162,46 @@ export class ESSPL {
 
     this.listenToLoginEvents();
   }
+
+  askForPermissions(){
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+  result => console.log('Has permission?',result.hasPermission),
+  err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+  );
+
+  this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION, this.androidPermissions.PERMISSION.GET_ACCOUNTS, this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION]);
+  }
+
+  redirectToPage(data){
+     let type
+    try {
+      type = data.notification.payload.additionalData.root;
+    } catch (e) {
+      console.warn(e);
+    }
+    switch (type) {
+      case 'victimLocation': {
+        let list: any[] = [data.notification.payload.additionalData.lat,data.notification.payload.additionalData.long];
+        this.app.getActiveNav().push(VictimlocationPage, list);
+        break;
+      } 
+    }
+
+  }
   checkMore(){
 
-    this.userData.hasLoggedIn().then((hasLoggedIn)=> {
-      console.log(hasLoggedIn,'logIn');
-      if(hasLoggedIn === 'true'){
-        this.rootPage = TabsPage;
+        this.userData.hasLoggedIn().then((hasLoggedIn)=> {
+          console.log(hasLoggedIn,'logIn');
+          if(hasLoggedIn === 'true'){
+            this.rootPage = TabsPage;
+          }
+           else  {
+        this.rootPage = LoginPage;
       }
-      else  {
-        //while running in phone
-        /*this.rootPage = LoginPage;*/
-        //while running in web
-        this.rootPage = MapPage;
-      }
-    })
+        })
+
+
+      
   }
 
   openPage(page: PageInterface) {

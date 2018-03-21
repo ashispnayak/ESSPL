@@ -28,35 +28,7 @@ background-position: left top;
 
 <ion-content>
 
-    <div [class.hide]="driverUser||rideUser" style=" position: absolute;
-    top: 40%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)" >
-    
-   
-<button  ion-button (click)="userType('DRIVER');" color="primary" >
- 
-      
-      Get Riders
-    </button>
-
-    </div>
-
-    <div [class.hide]="driverUser||rideUser" style=" position: absolute;
-    top: 60%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)" >
-    
-   
-<button  ion-button (click)="userType('RIDER');" color="primary"  >
-      Book Rides
-    </button>
-
-    </div>
-
-<div *ngIf="hide" style=" position: absolute;
+<div style=" position: absolute;
     top: 60%;
     left: 50%;
     margin-right: -50%;

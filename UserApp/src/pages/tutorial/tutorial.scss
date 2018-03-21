@@ -1,41 +1,106 @@
 page-tutorial {
-    .toolbar-background {
-        background: transparent;
-        border-color: transparent;
+   .background {
+     background-image: url('assets/img/city.png');
+     background-repeat: no-repeat;
+     background-position: center;
+     
+     }
+
+ 
+.Img1 {
+     
+     height: 50%;
+     width: 50%;
+     margin-top: 60%;
+     margin-bottom: -70%;
+     margin-left: 45%;
+     animation-delay: 1s; -webkit-animation-delay: 1s; -moz-animation-delay: 1s; -o-animation-delay: 1s;
+}
+#Img2 {
+     
+     margin-right: 75%;
+     margin-left: -5%;
+     margin-top: 60%;
+     margin-bottom: -20%;
+     height: 75%;
+     width: 70%;
+     animation-delay: 1s; -webkit-animation-delay: 1s; -moz-animation-delay: 1s; -o-animation-delay: 1s;
+     }
+#Img5 {
+    margin-right: 75%;
+     margin-left: -5%;
+     margin-top: 60%;
+     margin-bottom: -20%;
+     height: 75%;
+     width: 70%;
+    animation-delay: 3s; -webkit-animation-delay: 3s; -moz-animation-delay: 3s; -o-animation-delay: 3s;
+
+}
+ion-icon {
+    margin-top: 75%;
+    font-size:7em;
+   
+}
+.Header {
+    padding-bottom: 15px;
+}
+h2 {
+    margin-top: 10%;
+    font-family: 'Raleway';
+    animation-name: rubberBand;
+    animation-duration: 5s;
+}
+p {
+    text-align: center;
+    font-family: 'Raleway';
+    animation-name: rubberBand;
+    animation-duration: 5s;
+}
+.Img3 {
+    
+    height: 20%;
+    margin-top: 15%;
+     margin-bottom: -80%;
+     margin-left: 40%;
+     animation-delay: 3s; -webkit-animation-delay: 3s; -moz-animation-delay: 3s; -o-animation-delay: 3s;
+    
+}
+.Img4 {
+ height: 50%;
+     width: 50%;
+     margin-top: 40%;
+     margin-bottom: -70%;
+     margin-left: 40%;
+     animation-delay: 5s; -webkit-animation-delay: 5s; -moz-animation-delay: 5s; -o-animation-delay: 5s;
+}
+#Img6 {
+    height: 10px;
+    width: 10px;
+    animation-delay: 5s; -webkit-animation-delay: 5s; -moz-animation-delay: 5s; -o-animation-delay: 5s;
+}
+#img21 {
+
+    margin-left: 4%;
+    margin-top: 7%;
+    animation-delay: 7s; -webkit-animation-delay: 7s; -moz-animation-delay: 7s; -o-animation-delay: 7s;
+}
+#img22 {
+    
+    margin-left: 5%;
+    animation-delay: 9s; -webkit-animation-delay: 9s; -moz-animation-delay: 9s; -o-animation-delay: 9s;
+}
+#img23 {
+    
+    max-width: 100%;
+    animation-delay: 11s; -webkit-animation-delay: 11s; -moz-animation-delay: 11s; -o-animation-delay: 11s;
     }
-    .slide-zoom {
-        height: 100%;
-    }
-    .slide-title {
-        color: #ff6737;
-        margin-top: 2.8rem;
-    }
-    .slide-image {
-        max-height: 50%;
-        max-width: 60%;
-        margin: 36px 0;
-    }
-    b {
-        font-weight: 500;
-    }
-    p {
-        padding: 0 40px;
-        font-size: 14px;
-        line-height: 1.5;
-        color: #ff6737;
-        b {
-            color: #ff6737;
-        }
-    }
-    .bg-img {
-        background-image: url(../assets/img/bg1.jpg);
-        background-repeat: no-repeat;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-attachment: fixed;
-        webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-    }
+#Img6 {
+     margin-right: 75%;
+     margin-left: -5%;
+     margin-top: 60%;
+     margin-bottom: -20%;
+     height: 75%;
+     width: 70%;
+}
+    
 }

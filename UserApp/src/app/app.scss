@@ -3,6 +3,13 @@
 // --------------------------------------------------
 
 // global styles
+ @import url('https://fonts.googleapis.com/css?family=Raleway:300,700');
+ @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css');
+ 
+ion-content {
+  background-color: #EFEFEF !important;
+  font-family: 'Raleway';
+}
 .primary-bg {
   background-color: color($colors, primary) !important;
 }

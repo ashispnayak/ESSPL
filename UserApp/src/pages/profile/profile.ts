@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+
 
 /**
  * Generated class for the ProfilePage page.
@@ -15,7 +17,21 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ProfilePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+	displayImage:any;
+	displayName:any;
+	displayEmail:any;
+  constructor(public navCtrl: NavController, public storage: Storage, public navParams: NavParams) {
+  	
+  	 this.storage.get('imageUrl').then((val) => {
+    this.displayImage = val;
+  });
+  	  this.storage.get('name').then((val) => {
+    this.displayName = val;
+  });
+  	   this.storage.get('email').then((val) => {
+    this.displayEmail = val;
+  });
+  	
   }
 
   ionViewDidLoad() {

@@ -1,31 +1,34 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from "@angular/http";
 import { ErrorHandler, NgModule } from '@angular/core';
-import { Http, Headers, RequestOptions} from '@angular/http';
-import {HttpModule} from '@angular/http';
-
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ESSPL } from './app.component';
 import { Geolocation } from '@ionic-native/geolocation';
-
-import { Firebase } from '@ionic-native/firebase';
-import { Network } from '@ionic-native/network';
 import { GoogleMaps, GoogleMap, GoogleMapsEvent, GoogleMapOptions, CameraPosition, MarkerOptions, Marker} from '@ionic-native/google-maps';
-//import { File } from '@ionic-native/file';
-import { Storage } from '@ionic/storage';
 import firebase from 'firebase';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { Network } from '@ionic-native/network';
+import { Firebase } from '@ionic-native/firebase';
+
+
 
 import { AboutPage } from '../pages/about/about';
 import { AccountPage } from '../pages/account/account';
 import { LoginPage } from '../pages/login/login';
 import { MapPage } from '../pages/map/map';
 import { OffersPage } from '../pages/offers/offers';
+import { SosPage } from '../pages/sos/sos';
 import { OffersDetailPage } from '../pages/offers-detail/offers-detail';
 import { SubscribePage } from '../pages/subscribe/subscribe';
 import { GooglePlus } from '@ionic-native/google-plus';
 import{ AngularFireModule } from 'angularfire2';
+import{ AngularFireDatabaseModule } from 'angularfire2/database';
+import { VictimlocationPage } from '../pages/victimlocation/victimlocation';
+import { RideDetailModalPage } from '../pages/ride-detail-modal/ride-detail-modal';
+
 import { ContactPage } from '../pages/contact/contact';
 import { PlacesListPage } from '../pages/places-list/places-list';
 import { PlacesDetailPage } from '../pages/places-detail/places-detail';
@@ -33,22 +36,17 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { SupportPage } from '../pages/support/support';
 import { AutocompletePage } from '../pages/autocomplete/autocomplete';
-import { RideDetailModalPage } from '../pages/ride-detail-modal/ride-detail-modal';
-
+import {ProfilePage} from '../pages/profile/profile';
+import { OneSignal } from '@ionic-native/onesignal';
 import { OffersData } from '../providers/offers-data';
 import { UserData } from '../providers/userdata';
 import { Utility } from '../providers/utility';
 import { SpinnerProvider } from '../providers/spinner/spinner';
+import { ServiceProvider } from '../providers/service';
+
 import { MapProvider } from '../providers/map/map';
+import { ApiProvider } from '../providers/api/api';
 
-import { ServiceProvider } from '../providers/service/service';
-
-import { Connectivity } from '../services/connectivity';
-
-
-export function provideStorage() {
- return new Storage({ name: 'esspldb' });
-}
 
 export const firebaseConfig={
    apiKey: "AIzaSyBrBaAvyALhPRjfg41qCf5isMMyaffIebE",
@@ -67,19 +65,22 @@ firebase.initializeApp(firebaseConfig)
     AccountPage,
     LoginPage,
     MapPage,
+    SosPage,
     OffersPage,
+    VictimlocationPage ,
     SubscribePage,
     OffersDetailPage,
+    ProfilePage,
     ContactPage,
     PlacesListPage,
     PlacesDetailPage,
     TabsPage,
     TutorialPage,
+    RideDetailModalPage,
     SupportPage,
-    AutocompletePage,
-    RideDetailModalPage
+    AutocompletePage
   ],
-  imports: [BrowserModule ,HttpModule,
+  imports: [BrowserModule ,HttpModule,AngularFireDatabaseModule,
     IonicModule.forRoot(ESSPL),
     IonicStorageModule.forRoot(),
      AngularFireModule.initializeApp(firebaseConfig)
@@ -91,8 +92,12 @@ firebase.initializeApp(firebaseConfig)
     AccountPage,
     LoginPage,
     MapPage,
+    SosPage,
+    VictimlocationPage ,
     OffersPage,
     SubscribePage,
+    RideDetailModalPage,
+    ProfilePage,
     OffersDetailPage,
     ContactPage,
     PlacesListPage,
@@ -100,22 +105,23 @@ firebase.initializeApp(firebaseConfig)
     TabsPage,
     TutorialPage,
     SupportPage,
-    AutocompletePage,
-    RideDetailModalPage
+    AutocompletePage
   ],
   providers: [
     StatusBar,
+    OneSignal,
     Geolocation,
+    Network,
     Firebase,
+     ServiceProvider,
     GooglePlus,
+    AndroidPermissions,
+    GoogleMaps,
     SplashScreen,
-    Connectivity,
-    { provide: Storage, useFactory: provideStorage },
-    Firebase,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserData, Utility, OffersData, SpinnerProvider, MapProvider,
-    ServiceProvider,
-    GoogleMaps
+    ApiProvider
+    
   ]
 })
 export class AppModule { }

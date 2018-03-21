@@ -10,7 +10,7 @@ import { Firebase } from '@ionic-native/firebase';
 import { Observable } from 'rxjs/Observable';
 import { SpinnerProvider } from '../../providers/spinner/spinner'
 import { MapProvider } from '../../providers/map/map';
-import { ServiceProvider } from '../../providers/service/service';
+import { ServiceProvider } from '../../providers/service';
 import { UserData } from '../../providers/userdata';
 import { RideDetailModalPage } from '../ride-detail-modal/ride-detail-modal';
 
@@ -479,7 +479,7 @@ declare var google;
 
    placeRidesOnMap(latitude,longitude,carName){
      let location = new google.maps.LatLng((latitude),(longitude));
-     var image = '../../assets/img/reservecar.png';
+     var image = '../assets/img/reservecar.png';
      this.marker = new google.maps.Marker({
        position: location,
        map: this.map,

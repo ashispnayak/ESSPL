@@ -27,6 +27,15 @@ export class UserData {
     }
   };
 
+  setDisplayName(resName){
+  this.storage.set('Name', resName);
+  }
+  setDisplayEmail(resEmail){
+    this.storage.set('Email', resEmail);
+  }
+  setDisplayImage(resImage){
+    this.storage.set('ImageUrl', resImage);
+  }
   
 
   logout() {
@@ -44,6 +53,11 @@ export class UserData {
       return value;
     });
   };
+  getName(){
+    return this.storage.get('name').then((value)=>{
+      return value;
+    });
+  }
 
   // return a promise
   hasLoggedIn() {
